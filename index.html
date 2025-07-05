@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chatbox</title>
+
+    <!-- Font Awesome 6 (updated link) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Your custom CSS -->
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+    <!-- Floating open chat button -->
+    <button class="chatbox-open" aria-label="Open Chatbox">
+        <i class="fa-solid fa-circle-info fa-2x"></i>
+    </button>
+
+    <!-- Floating close chat button -->
+    <button class="chatbox-close" aria-label="Close Chatbox">
+        <i class="fa-solid fa-xmark fa-2x"></i>
+    </button>
+
+    <!-- Chatbox Popup -->
+    <section class="chatbox-popup">
+        <header class="chatbox-popup__header">
+            <aside class="chatbox-popup__title" style="flex: 8;">
+                <h1>Setup Guide</h1>
+            </aside>
+            <aside class="chatbox-popup__controls" style="flex: 1;">
+                <button class="chatbox-maximize" aria-label="Maximize Chatbox">
+                    <i class="fa-solid fa-window-maximize"></i>
+                </button>
+            </aside>
+        </header>
+
+        <main class="chatbox-popup__main">
+            <h2>Welcome!</h2>
+            <section id="video-tutorial">
+                <h2>Video Tutorial</h2>
+                <video width="100%" controls>
+                    <source src="tutorial.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+            </section>
+
+            <section id="progress-section" class="progress-container">
+                <label for="setup-progress">Progress:</label>
+                <progress id="setup-progress" value="0" max="3"></progress>
+                <span id="progress-text">0 of 3 steps</span>
+            </section>
+
+            <section id="tasks">
+                <h2>Tasks</h2>
+                <ul>
+                    <li><label><input type="checkbox" class="task-checkbox" /> Install dependencies</label></li>
+                    <li><label><input type="checkbox" class="task-checkbox" /> Configure environment</label></li>
+                    <li><label><input type="checkbox" class="task-checkbox" /> Run initial build</label></li>
+                    <li><label><input type="checkbox" class="task-checkbox" /> Run initial build</label></li>
+                </ul>
+            </section>
+        </main>
+
+        <footer class="chatbox-popup__footer">
+            -<!--  <aside style="flex: 1; text-align: center;">
+                <i class="fa-solid fa-camera" aria-hidden="true"></i>
+            </aside>
+            <aside style="flex: 10;">
+                <textarea placeholder="Type your message here..." autofocus></textarea>
+            </aside>
+            <aside style="flex: 1; text-align: center;">
+                <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+            </aside> -->
+        </footer>
+    </section>
+
+    <!-- Full-screen Chatbox Panel -->
+    <section class="chatbox-panel">
+        <header class="chatbox-panel__header">
+            <aside style="flex: 6;">
+                <h1>Setup Guide</h1>
+            </aside>
+            <aside style="flex: 3; text-align: right;">
+                <button class="chatbox-minimize" aria-label="Minimize Chatbox">
+                    <i class="fa-solid fa-window-restore"></i>
+                </button>
+                <button class="chatbox-panel-close" aria-label="Close Chatbox">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </aside>
+        </header>
+
+        <main class="chatbox-panel__main">
+
+            <h2>Welcome!</h2>
+            <section id="video-tutorial">
+                <h2>Video Tutorial</h2>
+                <video width="100%" controls>
+                    <source src="tutorial.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+            </section>
+
+            <section id="progress-section" class="progress-container">
+                <label for="setup-progress">Progress:</label>
+                <progress id="setup-progress" value="0" max="3"></progress>
+                <span id="progress-text">0 of 3 steps</span>
+            </section>
+
+            <section id="tasks">
+                <h2>Tasks</h2>
+                <ul>
+                    <li><label><input type="checkbox" class="task-checkbox" /> Install dependencies</label></li>
+                    <li><label><input type="checkbox" class="task-checkbox" /> Configure environment</label></li>
+                    <li><label><input type="checkbox" class="task-checkbox" /> Run initial build</label></li>
+                    <li><label><input type="checkbox" class="task-checkbox" /> Run initial build</label></li>
+                </ul>
+            </section>
+        </main>
+
+        <footer class="chatbox-panel__footer">
+            <!-- <aside style="flex: 1; text-align: center;">
+                <i class="fa-solid fa-camera"></i>
+            </aside>
+            <aside style="flex: 10;">
+                <textarea placeholder="Type your message here..." autofocus></textarea>
+            </aside>
+            <aside style="flex: 1; text-align: center;">
+                <i class="fa-solid fa-paper-plane"></i>
+            </aside> -->
+        </footer>
+    </section>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="js/script.js"></script>
+</body>
+
+</html>
