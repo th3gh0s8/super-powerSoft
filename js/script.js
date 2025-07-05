@@ -79,6 +79,42 @@ chatbox(() => {
         updateProgress();
     });
 
-    // Initialize progress bar on page load
-    updateProgress();
+    // Stop propagation on chatbox container clicks
+    chatbox(".chatbox-popup, .chatbox-panel").on("click", function(e) {
+        e.stopPropagation();
+    });
+
+    // Stop propagation on control buttons
+    chatbox(
+        ".chatbox-open, .chatbox-close, .chatbox-maximize, .chatbox-minimize",
+    ).on("click", function(e) {
+        e.stopPropagation();
+    });
+
+    // Click outside closes chatbox
+    chatbox(document).on("click", function(e) {
+        const $target = chatbox(e.target);
+
+        if (
+            chatbox(".chatbox-popup").is(":visible") ||
+            chatbox(".chatbox-panel").is(":visible")
+        ) {
+            if (
+                !$target.closest(".chatbox-popup, .chatbox-panel").length &&
+                !$target.is(
+                    ".chatbox-open, .chatbox-close, .chatbox-maximize, .chatbox-minimize",
+                )
+            ) {
+                chatbox(".chatbox-popup, .chatbox-panel, .chatbox-close")
+                    .fadeOut();
+                chatbox(".chatbox-open").fadeIn();
+            }
+        }
+    });
+    chatbox(document).on("keydown", function(e) {
+        if (e.key === "Escape") {
+            chatbox(".chatbox-popup, .chatbox-panel, .chatbox-close").fadeOut();
+            chatbox(".chatbox-open").fadeIn();
+        }
+    });
 });
