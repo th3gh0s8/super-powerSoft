@@ -4,37 +4,37 @@ chatbox(() => {
     // ========================
     // Chatbox UI controls
     // ========================
-
+    // Open popup: show popup + close button, hide open button
     // Open popup
     chatbox(".chatbox-open").click(() => {
-        chatbox(".chatbox-popup, .chatbox-close").fadeIn();
-        chatbox(".chatbox-open").hide(); // hide open button
+        chatbox(".chatbox-popup").show().attr("aria-hidden", "false");
+        chatbox(".chatbox-close").show().attr("aria-hidden", "false");
+        chatbox(".chatbox-open").hide();
     });
 
     // Close popup
     chatbox(".chatbox-close").click(() => {
-        chatbox(".chatbox-popup, .chatbox-close").fadeOut();
-        chatbox(".chatbox-open").fadeIn(); // bring back open button
+        chatbox(".chatbox-popup").hide().attr("aria-hidden", "true");
+        chatbox(".chatbox-close").hide().attr("aria-hidden", "true");
+        chatbox(".chatbox-open").show();
     });
 
     // Maximize to full-screen panel
     chatbox(".chatbox-maximize").click(() => {
-        chatbox(".chatbox-popup, .chatbox-open, .chatbox-close").fadeOut();
-        chatbox(".chatbox-panel").css("display", "flex").hide().fadeIn();
+        chatbox(".chatbox-popup, .chatbox-open, .chatbox-close").hide();
+        chatbox(".chatbox-panel").css("display", "flex").show();
     });
 
     // Minimize back to popup
     chatbox(".chatbox-minimize").click(() => {
-        chatbox(".chatbox-panel").fadeOut(() => {
-            chatbox(".chatbox-popup, .chatbox-open, .chatbox-close").fadeIn();
-        });
+        chatbox(".chatbox-panel").hide();
+        chatbox(".chatbox-popup, .chatbox-open, .chatbox-close").show();
     });
 
     // Close full-screen panel
     chatbox(".chatbox-panel-close").click(() => {
-        chatbox(".chatbox-panel").fadeOut(() => {
-            chatbox(".chatbox-open").fadeIn();
-        });
+        chatbox(".chatbox-panel").hide();
+        chatbox(".chatbox-open").show();
     });
 
     // ========================
@@ -48,19 +48,19 @@ chatbox(() => {
         const totalTasks = Math.max($popupTasks.length, $panelTasks.length);
         const completed = $popupTasks.filter(":checked").length;
 
-        // Set max attribute dynamically
-        chatbox(".chatbox-popup #setup-progress").attr("max", totalTasks);
-        chatbox(".chatbox-panel #setup-progress").attr("max", totalTasks);
-
-        // Set current value
-        chatbox(".chatbox-popup #setup-progress").val(completed);
-        chatbox(".chatbox-panel #setup-progress").val(completed);
+        // Update progress bars max and value
+        chatbox(".chatbox-popup .setup-progress").attr("max", totalTasks).val(
+            completed,
+        );
+        chatbox(".chatbox-panel .setup-progress").attr("max", totalTasks).val(
+            completed,
+        );
 
         // Update progress text
-        chatbox(".chatbox-popup #progress-text").text(
+        chatbox(".chatbox-popup .progress-text").text(
             `${completed} of ${totalTasks} steps`,
         );
-        chatbox(".chatbox-panel #progress-text").text(
+        chatbox(".chatbox-panel .progress-text").text(
             `${completed} of ${totalTasks} steps`,
         );
     }
@@ -119,8 +119,11 @@ chatbox(() => {
 
     // Prevent clicks on control buttons from bubbling up
     chatbox(
-        ".chatbox-open, .chatbox-close, .chatbox-maximize, .chatbox-minimize",
-    ).on("click", (e) => e.stopPropagation());
+        ".chatbox-open, .chatbox-close, .chatbox-maximize, .chatbox-minimize, .chatbox-panel-close",
+    ).on(
+        "click",
+        (e) => e.stopPropagation(),
+    );
 
     // Close/minimize chatbox on outside click
     chatbox(document).on("click", function(e) {
@@ -133,7 +136,7 @@ chatbox(() => {
             if (
                 !$target.closest(".chatbox-popup, .chatbox-panel").length &&
                 !$target.is(
-                    ".chatbox-open, .chatbox-close, .chatbox-maximize, .chatbox-minimize",
+                    ".chatbox-open, .chatbox-close, .chatbox-maximize, .chatbox-minimize, .chatbox-panel-close",
                 )
             ) {
                 chatbox(".chatbox-popup, .chatbox-panel, .chatbox-close")

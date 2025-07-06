@@ -97,12 +97,6 @@ textarea::placeholder {
   border-top-right-radius: 12px;
   border-top-left-radius: 12px;
 }
-.chatbox-popup .chatbox-popup__header .chatbox-popup__avatar {
-  margin-top: -32px;
-  background-color: #0360a5;
-  border: 5px solid rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
-}
 .chatbox-popup .chatbox-popup__main {
   box-sizing: border-box;
   width: 100%;
@@ -172,21 +166,6 @@ textarea::placeholder {
   align-items: center;
   justify-content: space-between;
   flex: 0 0 auto;
-}
-
-button.chatbox-open,
-button.chatbox-close {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-button.chatbox-close {
-  opacity: 0;
-  pointer-events: none;
-}
-
-button.chatbox-close.active {
-  opacity: 1;
-  pointer-events: auto;
 }
 
 /*# sourceMappingURL=styles.css.map */
