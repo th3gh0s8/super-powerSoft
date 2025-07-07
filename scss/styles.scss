@@ -146,6 +146,10 @@ textarea {
   bottom: calc(2 * #{$base-dimension} + #{$base-button-size});
   left: $base-dimension;
   width: $base-height;
+  max-height: 500px; // 👈 sets max size for popup
+  height: 100%;
+  /* overflow-y: auto; // 👈 enables scroll inside
+  overflow-x: hidden; // Added to prevent horizontal scroll if needed */
   background-color: $background-color;
   border-radius: $base-border-radius;
 
@@ -153,16 +157,23 @@ textarea {
     @include chatbox-header;
     border-top-right-radius: $base-border-radius;
     border-top-left-radius: $base-border-radius;
+    flex-shrink: 0;
+    /* ADD OR ENSURE THIS IS PRESENT */
   }
 
   .chatbox-popup__main {
     @include chatbox-main(left, flex-start, flex-start, $base-dimension);
+    flex: 1 1 auto; // fill remaining space
+    overflow-y: auto; // 👈 make main content scrollable
+    overflow-x: hidden
   }
 
   .chatbox-popup__footer {
     @include chatbox-footer;
     border-bottom-right-radius: $base-border-radius;
     border-bottom-left-radius: $base-border-radius;
+    flex-shrink: 0;
+    /* ADD OR ENSURE THIS IS PRESENT */
   }
 }
 
@@ -186,6 +197,7 @@ textarea {
   .chatbox-panel__main {
     @include chatbox-main(left, flex-start, flex-start, $base-dimension);
     flex: 1 1 auto;
+    overflow-y: auto; // 👈 add this to enable scrolling
   }
 
   .chatbox-panel__footer {
@@ -256,5 +268,33 @@ progress {
         #00f2fe 10px,
         #00f2fe 20px);
     animation: progress-stripes 1s linear infinite;
+  }
+}
+
+.scrollable {
+  flex: 1 1 auto; // let it grow to fill space
+  overflow-y: auto; // make content scroll inside popup
+  overflow-x: hidden;
+  padding-right: 8px; // avoid overlap with scrollbar
+
+  // Smooth scrolling
+  scroll-behavior: smooth;
+
+  // Pretty scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
   }
 }

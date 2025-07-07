@@ -1,3 +1,4 @@
+@charset "UTF-8";
 body {
   margin: 0;
   padding: 0;
@@ -82,6 +83,10 @@ textarea::placeholder {
   bottom: calc(2 * 16px + 52px);
   left: 16px;
   width: 377px;
+  max-height: 500px;
+  height: 100%;
+  /* overflow-y: auto; // 👈 enables scroll inside
+  overflow-x: hidden; // Added to prevent horizontal scroll if needed */
   background-color: #fff;
   border-radius: 12px;
 }
@@ -96,6 +101,8 @@ textarea::placeholder {
   justify-content: space-between;
   border-top-right-radius: 12px;
   border-top-left-radius: 12px;
+  flex-shrink: 0;
+  /* ADD OR ENSURE THIS IS PRESENT */
 }
 .chatbox-popup .chatbox-popup__main {
   box-sizing: border-box;
@@ -108,6 +115,9 @@ textarea::placeholder {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .chatbox-popup .chatbox-popup__footer {
   box-sizing: border-box;
@@ -119,6 +129,8 @@ textarea::placeholder {
   justify-content: space-between;
   border-bottom-right-radius: 12px;
   border-bottom-left-radius: 12px;
+  flex-shrink: 0;
+  /* ADD OR ENSURE THIS IS PRESENT */
 }
 
 .chatbox-panel {
@@ -156,6 +168,7 @@ textarea::placeholder {
   justify-content: flex-start;
   align-items: flex-start;
   flex: 1 1 auto;
+  overflow-y: auto;
 }
 .chatbox-panel .chatbox-panel__footer {
   box-sizing: border-box;
@@ -209,6 +222,27 @@ progress::-moz-progress-bar {
 .progress-striped::-moz-progress-bar {
   background: repeating-linear-gradient(45deg, #4facfe, #4facfe 10px, #00f2fe 10px, #00f2fe 20px);
   animation: progress-stripes 1s linear infinite;
+}
+
+.scrollable {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  scroll-behavior: smooth;
+}
+.scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollable::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+.scrollable::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+.scrollable::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /*# sourceMappingURL=styles.css.map */
