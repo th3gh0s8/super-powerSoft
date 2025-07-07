@@ -38,62 +38,7 @@
                 </button>
             </aside>
         </header>
-
-        <main class="chatbox-popup__main scrollable">
-            <h2>Welcome!</h2>
-            <section class="video-tutorial">
-                <h2>Video Tutorial</h2>
-                <video width="100%" controls>
-                    <source src="~/V.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                </video>
-            </section>
-
-            <section class="progress-container">
-                <label>Progress:</label>
-                <progress class="setup-progress" value="0"></progress>
-                <span class="progress-text">0 of 3 steps</span>
-            </section>
-            <section class="tasks">
-                <h2>Tasks</h2>
-                <ul>
-                    <li>
-                        <input type="checkbox" id="task1" class="task-checkbox" />
-                        <label for="task1" class="task-label">Dependencies</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="task2" class="task-checkbox" />
-                        <label for="task2" class="task-label">Configure environment</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="task3" class="task-checkbox" />
-                        <label for="task3" class="task-label">Run initial build</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="task4" class="task-checkbox" />
-                        <label for="task4" class="task-label">Finalize setup</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="task5" class="task-checkbox" />
-                        <label for="task5" class="task-label">Verify installation</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="task6" class="task-checkbox" />
-                        <label for="task6" class="task-label">Install dependencies</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="task7" class="task-checkbox" />
-                        <label for="task7" class="task-label">Configure environment</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="task8" class="task-checkbox" />
-                        <label for="task8" class="task-label">Run initial build</label>
-                    </li>
-                </ul>
-            </section>
-
-
-        </main>
+        <div id="popup-tasks"></div>
     </section>
 
     <!-- Full-screen Chatbox Panel -->
@@ -112,19 +57,29 @@
             </aside>
         </header>
 
-        <main class="chatbox-panel__main scrollable">
+
+        <div id="panel-tasks"></div>
+    </section>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <template id="task-template">
+        <main class="chatbox-popup__main scrollable">
+
+            <div id="panel-tasks"></div>
             <h2>Welcome!</h2>
             <section class="video-tutorial">
                 <h2>Video Tutorial</h2>
                 <video width="100%" controls>
-                    <source src="tutorial.mp4" type="video/mp4" />
+                    <source src="~/V.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
             </section>
 
             <section class="progress-container">
                 <label>Progress:</label>
-                <progress class="setup-progress" value="0" max="5"></progress>
+                <progress class="setup-progress" value="0"></progress>
                 <span class="progress-text">0 of 3 steps</span>
             </section>
 
@@ -167,10 +122,8 @@
             </section>
 
         </main>
-    </section>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    </template>
 
     <!-- Custom JS -->
     <script src="js/script.js"></script>

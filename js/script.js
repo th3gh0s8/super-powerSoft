@@ -2,6 +2,8 @@ const chatbox = jQuery.noConflict();
 
 chatbox(() => {
     // ========================
+
+    // ========================
     // Chatbox UI controls
     // ========================
     // Open popup: show popup + close button, hide open button
@@ -120,4 +122,20 @@ chatbox(() => {
             updateProgress(chatbox(".chatbox-panel"));
         },
     );
+
+    const template = document.querySelector("#task-template");
+
+    if (template) {
+        // Clone and insert into popup
+        const popupContent = template.content.cloneNode(true);
+        chatbox(".chatbox-popup").append(popupContent);
+
+        // Clone and insert into panel
+        const panelContent = template.content.cloneNode(true);
+        chatbox(".chatbox-panel").append(panelContent);
+
+        // Initialize progress immediately for both
+        updateProgress(chatbox(".chatbox-popup"));
+        updateProgress(chatbox(".chatbox-panel"));
+    }
 });
