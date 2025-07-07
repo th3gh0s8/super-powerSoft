@@ -41,26 +41,24 @@ chatbox(() => {
     // Progress bar logic
     // ========================
 
-    function updateProgress() {
-        const $popupTasks = chatbox(".chatbox-popup .task-checkbox");
-        const $panelTasks = chatbox(".chatbox-panel .task-checkbox");
+    function updateProgress(container) {
+        const $tasks = container.find(".task-checkbox");
+        const totalTasks = $tasks.length;
+        const completed = $tasks.filter(":checked").length;
 
-        const totalTasks = Math.max($popupTasks.length, $panelTasks.length);
-        const completed = $popupTasks.filter(":checked").length;
+        // Update the tasks header in this container only
+        container.find(".tasks h2").text(
+            `Tasks (${completed}/${totalTasks} completed)`,
+        );
 
-        // Update progress bars max and value
-        chatbox(".chatbox-popup .setup-progress").attr("max", totalTasks).val(
+        // Lock checked boxes only here
+        $tasks.filter(":checked").prop("disabled", true);
+
+        // Update the progress bar and progress text inside this container
+        container.find(".setup-progress").attr("max", totalTasks).val(
             completed,
         );
-        chatbox(".chatbox-panel .setup-progress").attr("max", totalTasks).val(
-            completed,
-        );
-
-        // Update progress text
-        chatbox(".chatbox-popup .progress-text").text(
-            `${completed} of ${totalTasks} steps`,
-        );
-        chatbox(".chatbox-panel .progress-text").text(
+        container.find(".progress-text").text(
             `${completed} of ${totalTasks} steps`,
         );
     }
@@ -69,7 +67,7 @@ chatbox(() => {
     // Checkbox syncing (dynamic)
     // ========================
 
-    // Sync from popup -> panel
+    // Sync from popup -> panel and update progress in both containers
     chatbox(document).on(
         "change",
         ".chatbox-popup .task-checkbox",
@@ -82,13 +80,21 @@ chatbox(() => {
 
             if ($panelTasks.eq(index).length) {
                 $panelTasks.eq(index).prop("checked", checked);
+                if (checked) {
+                    $panelTasks.eq(index).prop("disabled", true);
+                }
             }
 
-            updateProgress();
+            if (checked) {
+                chatbox(this).prop("disabled", true);
+            }
+
+            updateProgress(chatbox(".chatbox-popup"));
+            updateProgress(chatbox(".chatbox-panel"));
         },
     );
 
-    // Sync from panel -> popup
+    // Sync from panel -> popup and update progress in both containers
     chatbox(document).on(
         "change",
         ".chatbox-panel .task-checkbox",
@@ -101,61 +107,17 @@ chatbox(() => {
 
             if ($popupTasks.eq(index).length) {
                 $popupTasks.eq(index).prop("checked", checked);
+                if (checked) {
+                    $popupTasks.eq(index).prop("disabled", true);
+                }
             }
 
-            updateProgress();
+            if (checked) {
+                chatbox(this).prop("disabled", true);
+            }
+
+            updateProgress(chatbox(".chatbox-popup"));
+            updateProgress(chatbox(".chatbox-panel"));
         },
     );
-
-    // ========================
-    // Global click handling
-    // ========================
-
-    // Prevent clicks inside chatbox from closing it
-    chatbox(".chatbox-popup, .chatbox-panel").on(
-        "click",
-        (e) => e.stopPropagation(),
-    );
-
-    // Prevent clicks on control buttons from bubbling up
-    chatbox(
-        ".chatbox-open, .chatbox-close, .chatbox-maximize, .chatbox-minimize, .chatbox-panel-close",
-    ).on(
-        "click",
-        (e) => e.stopPropagation(),
-    );
-
-    // Close/minimize chatbox on outside click
-    chatbox(document).on("click", function(e) {
-        const $target = chatbox(e.target);
-
-        if (
-            chatbox(".chatbox-popup").is(":visible") ||
-            chatbox(".chatbox-panel").is(":visible")
-        ) {
-            if (
-                !$target.closest(".chatbox-popup, .chatbox-panel").length &&
-                !$target.is(
-                    ".chatbox-open, .chatbox-close, .chatbox-maximize, .chatbox-minimize, .chatbox-panel-close",
-                )
-            ) {
-                chatbox(".chatbox-popup, .chatbox-panel, .chatbox-close")
-                    .fadeOut();
-                chatbox(".chatbox-open").fadeIn();
-            }
-        }
-    });
-
-    // Close chatbox with Escape key
-    chatbox(document).on("keydown", function(e) {
-        if (e.key === "Escape") {
-            chatbox(".chatbox-popup, .chatbox-panel, .chatbox-close").fadeOut();
-            chatbox(".chatbox-open").fadeIn();
-        }
-    });
-
-    // ========================
-    // Initialize progress on load
-    // ========================
-    updateProgress();
 });

@@ -85,8 +85,8 @@ textarea::placeholder {
   width: 377px;
   max-height: 500px;
   height: 100%;
-  /* overflow-y: auto; // 👈 enables scroll inside
-  overflow-x: hidden; // Added to prevent horizontal scroll if needed */
+  overflow-y: auto;
+  overflow-x: hidden;
   background-color: #fff;
   border-radius: 12px;
 }
@@ -243,6 +243,69 @@ progress::-moz-progress-bar {
 }
 .scrollable::-webkit-scrollbar-track {
   background: transparent;
+}
+
+.tasks ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.tasks ul li {
+  margin: 8px 0;
+  display: flex;
+  justify-content: center;
+}
+.tasks ul label {
+  display: inline-block;
+  width: 100%;
+  max-width: 300px;
+  padding: 12px 20px;
+  text-align: center;
+  background-color: #0360a5;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+.tasks ul label:hover {
+  background-color: #024a7f;
+}
+.tasks ul input[type=checkbox] {
+  display: none;
+}
+.tasks ul input[type=checkbox]:checked + label {
+  position: relative;
+  background-color: #ddd;
+  color: #888;
+  text-decoration: line-through;
+  cursor: not-allowed;
+  opacity: 0.8;
+  filter: grayscale(100%) brightness(90%);
+  box-shadow: none;
+}
+.tasks ul input[type=checkbox]:checked + label::before {
+  content: "";
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 50%;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+}
+.tasks ul input[type=checkbox]:checked + label::after {
+  content: "✅ Completed";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #4caf50;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /*# sourceMappingURL=styles.css.map */
