@@ -62,7 +62,7 @@ textarea {
   font-family: inherit;
   font-size: 16px;
   line-height: 1.4;
-  color: #888;
+  color: #000;
   background: none;
   border: none;
   outline: none;
@@ -70,7 +70,7 @@ textarea {
   overflow: hidden;
 }
 textarea::placeholder {
-  color: #888;
+  color: #000;
 }
 
 .chatbox-popup {
@@ -102,7 +102,7 @@ textarea::placeholder {
   width: 100%;
   padding: 16px;
   line-height: calc(16px + 16px / 2);
-  color: #888;
+  color: #000;
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -149,7 +149,7 @@ textarea::placeholder {
   width: 100%;
   padding: 16px;
   line-height: calc(16px + 16px / 2);
-  color: #888;
+  color: #000;
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -166,6 +166,49 @@ textarea::placeholder {
   align-items: center;
   justify-content: space-between;
   flex: 0 0 auto;
+}
+
+progress {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  border-radius: 10px;
+  background-color: #e0e0e0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+progress::-webkit-progress-bar {
+  background-color: #e0e0e0;
+  border-radius: 10px;
+}
+progress::-webkit-progress-value {
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+progress::-moz-progress-bar {
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+@keyframes progress-stripes {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40px 0;
+  }
+}
+.progress-striped::-webkit-progress-value {
+  background: repeating-linear-gradient(45deg, #4facfe, #4facfe 10px, #00f2fe 10px, #00f2fe 20px);
+  animation: progress-stripes 1s linear infinite;
+}
+.progress-striped::-moz-progress-bar {
+  background: repeating-linear-gradient(45deg, #4facfe, #4facfe 10px, #00f2fe 10px, #00f2fe 20px);
+  animation: progress-stripes 1s linear infinite;
 }
 
 /*# sourceMappingURL=styles.css.map */
