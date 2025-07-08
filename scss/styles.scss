@@ -343,6 +343,15 @@ progress {
       &:hover {
         background-color: #024a7f;
       }
+
+      .subtasks {
+        display: none; // 👈 hidden by default
+      }
+
+      li.expanded>.subtasks {
+        display: block; // 👈 show when parent li has .expanded
+      }
+
     }
 
     input[type="checkbox"] {

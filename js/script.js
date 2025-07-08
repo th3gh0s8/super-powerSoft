@@ -1,6 +1,28 @@
 const chatbox = jQuery.noConflict();
 
+let ytPlayer; // 👈 Move outside chatbox scope so YouTube API can call it
+
+// ✅ Global YouTube API callback
+function onYouTubeIframeAPIReady() {
+    ytPlayer = new YT.Player("yt-player", {
+        height: "360",
+        width: "640",
+        videoId: "dQw4w9WgXcQ", // Initial video
+        events: {
+            onReady: (event) => {
+                console.log("YouTube Player Ready!");
+            },
+        },
+    });
+}
+
 chatbox(() => {
+    function loadTutorial(videoId) {
+        if (ytPlayer && ytPlayer.loadVideoById) {
+            ytPlayer.loadVideoById(videoId);
+        }
+    }
+
     // ========================
     // Chatbox UI controls
     // ========================
@@ -8,12 +30,16 @@ chatbox(() => {
         chatbox(".chatbox-popup").show().attr("aria-hidden", "false");
         chatbox(".chatbox-close").show().attr("aria-hidden", "false");
         chatbox(".chatbox-open").hide();
+
+        loadTutorial("dQw4w9WgXcQ"); //  Load the video each time
     });
 
     chatbox(".chatbox-close").click(() => {
         chatbox(".chatbox-popup").hide().attr("aria-hidden", "true");
         chatbox(".chatbox-close").hide().attr("aria-hidden", "true");
         chatbox(".chatbox-open").show();
+
+        if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo(); //  Stop video when closing
     });
 
     chatbox(".chatbox-maximize").click(() => {
@@ -43,6 +69,9 @@ chatbox(() => {
             const allChecked = $subTasks.length > 0 &&
                 $subTasks.length === $subTasks.filter(":checked").length;
             chatbox(this).prop("checked", allChecked);
+
+            // 🔒 Lock parent if all subtasks are done
+            chatbox(this).prop("disabled", allChecked);
         });
     }
 
@@ -50,26 +79,24 @@ chatbox(() => {
         const $subTasks = container.find(".sub-task");
         const $standaloneTasks = container.find(".standalone");
 
-        const totalSubTasks = $subTasks.length + $standaloneTasks.length;
-        const completedSubTasks = $subTasks.filter(":checked").length +
+        const totalTasks = $subTasks.length + $standaloneTasks.length;
+        const completedTasks = $subTasks.filter(":checked").length +
             $standaloneTasks.filter(":checked").length;
 
         container.find(".tasks h2").text(
-            `Tasks (${completedSubTasks}/${totalSubTasks} completed)`,
+            `Tasks (${completedTasks}/${totalTasks} completed)`,
         );
 
-        // Lock checked subtasks and standalone tasks
         $subTasks.filter(":checked").prop("disabled", true);
         $standaloneTasks.filter(":checked").prop("disabled", true);
 
-        container.find(".setup-progress").attr("max", totalSubTasks).val(
-            completedSubTasks,
+        container.find(".setup-progress").attr("max", totalTasks).val(
+            completedTasks,
         );
         container.find(".progress-text").text(
-            `${completedSubTasks} of ${totalSubTasks} steps`,
+            `${completedTasks} of ${totalTasks} steps`,
         );
 
-        // Sync parent checkboxes state
         syncParents(container);
     }
 
@@ -92,37 +119,42 @@ chatbox(() => {
         updateProgress(chatbox(".chatbox-panel"));
     });
 
-    // Parent task controls subtasks
+    // ========================
+    // Toggle subtasks visibility
+    // ========================
+    chatbox(document).on("click", ".parent-task + label", function() {
+        const $parentLi = chatbox(this).closest("li");
+        $parentLi.toggleClass("expanded");
+    });
+
+    // Auto expand if parent checked
+    chatbox(document).on("change", ".parent-task", function() {
+        const $parentLi = chatbox(this).closest("li");
+        if (this.checked) {
+            $parentLi.addClass("expanded");
+        } else {
+            $parentLi.removeClass("expanded");
+        }
+    });
+
     chatbox(document).on("change", ".parent-task", function() {
         const $this = chatbox(this);
-
-        // 🔒 If parent is locked, stop
         if ($this.prop("disabled")) {
-            this.checked = true; // Keep it checked visually
+            this.checked = true;
             return;
         }
 
         const parentId = this.id;
         const isChecked = this.checked;
-
-        // Check/uncheck and lock/unlock all subtasks
         const $subTasks = chatbox(`.sub-task[data-parent="${parentId}"]`);
-        $subTasks.prop("checked", isChecked);
+        $subTasks.prop("checked", isChecked).prop("disabled", isChecked);
 
-        if (isChecked) {
-            // ✅ Lock subtasks and parent
-            $subTasks.prop("disabled", true);
-            $this.prop("disabled", true);
-        } else {
-            // 🔓 Unlock subtasks and parent
-            $subTasks.prop("disabled", false);
-        }
+        if (isChecked) $this.prop("disabled", true);
 
         updateProgress(chatbox(".chatbox-popup"));
         updateProgress(chatbox(".chatbox-panel"));
     });
 
-    // Subtasks update parent task
     chatbox(document).on("change", ".sub-task", function() {
         const parentId = chatbox(this).data("parent");
         const $siblings = chatbox(`.sub-task[data-parent="${parentId}"]`);
@@ -131,21 +163,16 @@ chatbox(() => {
 
         const $parent = chatbox(`#${parentId}`);
         $parent.prop("checked", allChecked);
-
-        // 🔒 Lock parent if all subtasks completed
-        if (allChecked) {
-            $parent.prop("disabled", true);
-        }
+        if (allChecked) $parent.prop("disabled", true);
 
         updateProgress(chatbox(".chatbox-popup"));
         updateProgress(chatbox(".chatbox-panel"));
     });
 
     // ========================
-    // Insert template content and initialize progress
+    // Insert template content
     // ========================
     const template = document.querySelector("#task-template");
-
     if (template) {
         const popupContent = template.content.cloneNode(true);
         chatbox(".chatbox-popup").append(popupContent);
