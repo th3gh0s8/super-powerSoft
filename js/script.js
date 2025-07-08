@@ -34,6 +34,18 @@ chatbox(() => {
     // ========================
     // Progress bar logic
     // ========================
+    function syncParents(container) {
+        container.find(".parent-task").each(function() {
+            const parentId = this.id;
+            const $subTasks = container.find(
+                `.sub-task[data-parent="${parentId}"]`,
+            );
+            const allChecked = $subTasks.length > 0 &&
+                $subTasks.length === $subTasks.filter(":checked").length;
+            chatbox(this).prop("checked", allChecked);
+        });
+    }
+
     function updateProgress(container) {
         const $subTasks = container.find(".sub-task");
         const $standaloneTasks = container.find(".standalone");
@@ -56,6 +68,9 @@ chatbox(() => {
         container.find(".progress-text").text(
             `${completedSubTasks} of ${totalSubTasks} steps`,
         );
+
+        // Sync parent checkboxes state
+        syncParents(container);
     }
 
     // ========================
