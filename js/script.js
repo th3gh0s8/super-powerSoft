@@ -59,16 +59,22 @@ chatbox(() => {
 
     chatbox(document).keydown((e) => {
         if (e.key === "Escape") {
-            chatbox(".chatbox-popup, .chatbox-close").fadeOut();
-            chatbox(".chatbox-open").fadeIn();
+            chatbox(".chatbox-popup").hide().attr("aria-hidden", "true");
+            chatbox(".chatbox-close").hide().attr("aria-hidden", "true");
+            chatbox(".chatbox-open").show();
+
+            if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo();
         }
     });
 
     chatbox(document).mouseup((e) => {
         const popup = chatbox(".chatbox-popup");
         if (!popup.is(e.target) && popup.has(e.target).length === 0) {
-            popup.fadeOut();
-            chatbox(".chatbox-open").fadeIn();
+            popup.hide().attr("aria-hidden", "true");
+            chatbox(".chatbox-close").hide().attr("aria-hidden", "true");
+            chatbox(".chatbox-open").show();
+
+            if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo();
         }
     });
 
