@@ -35,15 +35,20 @@ chatbox(() => {
     // Progress bar logic
     // ========================
     function updateProgress(container) {
-        const $subTasks = container.find(".sub-task"); // 👈 Only count subtasks
-        const totalSubTasks = $subTasks.length;
-        const completedSubTasks = $subTasks.filter(":checked").length;
+        const $subTasks = container.find(".sub-task");
+        const $standaloneTasks = container.find(".standalone");
+
+        const totalSubTasks = $subTasks.length + $standaloneTasks.length;
+        const completedSubTasks = $subTasks.filter(":checked").length +
+            $standaloneTasks.filter(":checked").length;
 
         container.find(".tasks h2").text(
             `Tasks (${completedSubTasks}/${totalSubTasks} completed)`,
         );
 
+        // Lock checked subtasks and standalone tasks
         $subTasks.filter(":checked").prop("disabled", true);
+        $standaloneTasks.filter(":checked").prop("disabled", true);
 
         container.find(".setup-progress").attr("max", totalSubTasks).val(
             completedSubTasks,
