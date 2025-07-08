@@ -61,8 +61,6 @@
         <div id="panel-tasks"></div>
     </section>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <template id="task-template">
         <main class="chatbox-popup__main scrollable">
@@ -71,10 +69,10 @@
             <h2>Welcome!</h2>
             <section class="video-tutorial">
                 <h2>Video Tutorial</h2>
-                <video width="100%" controls>
-                    <source src="~/V.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                </video>
+                <!-- <div id="yt-player"></div> -->
+
+            </section>
+
             </section>
 
             <section class="progress-container">
@@ -86,10 +84,11 @@
             <section class="tasks">
                 <h2>Tasks</h2>
                 <ul>
-                    <li>
+                    <li class="parent-task-item">
                         <input type="checkbox" id="task1" class="task-checkbox parent-task" />
                         <label for="task1" class="task-label">Dependencies</label>
-                        <ul class="subtasks">
+
+                        <ul class="subtasks hidden">
                             <li>
                                 <input type="checkbox" id="task1-1" class="task-checkbox sub-task"
                                     data-parent="task1" />
@@ -102,10 +101,12 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
+
+                    <li class="parent-task-item">
                         <input type="checkbox" id="task2" class="task-checkbox parent-task" />
                         <label for="task2" class="task-label">Configure Environment</label>
-                        <ul class="subtasks">
+
+                        <ul class="subtasks hidden">
                             <li>
                                 <input type="checkbox" id="task2-1" class="task-checkbox sub-task"
                                     data-parent="task2" />
@@ -118,9 +119,8 @@
                         <input type="checkbox" id="task7" class="task-checkbox standalone" />
                         <label for="task7">Verify installation</label>
                     </li>
-
-
                 </ul>
+
             </section>
 
 
@@ -138,9 +138,18 @@
             </aside> -->
         </footer>
     </template>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
+    <!-- YouTube Iframe API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
 
     <!-- Custom JS -->
     <script src="js/script.js"></script>
+
+
 </body>
 
 </html>

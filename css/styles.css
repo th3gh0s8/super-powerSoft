@@ -289,6 +289,12 @@ progress::-moz-progress-bar {
 .tasks ul label:hover {
   background-color: #024a7f;
 }
+.tasks ul label .subtasks {
+  display: none;
+}
+.tasks ul label li.expanded > .subtasks {
+  display: block;
+}
 .tasks ul input[type=checkbox] {
   display: none;
 }
