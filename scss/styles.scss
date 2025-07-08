@@ -142,14 +142,14 @@ textarea {
 // ================================
 .chatbox-popup {
   @include chabox-container;
-  display: none;
+  display: flex; // 👈 FLEX layout
+  flex-direction: column; // 👈 stack header, main, footer vertically
   bottom: calc(2 * #{$base-dimension} + #{$base-button-size});
   left: $base-dimension;
   width: $base-height;
-  max-height: 500px; // 👈 sets max size for popup
+  max-height: 500px; // 👈 total popup height
   height: 100%;
-  overflow-y: auto; // 👈 enables scroll inside
-  overflow-x: hidden; // Added to prevent horizontal scroll if needed
+  overflow: hidden; // 👈 prevent whole popup scroll
   background-color: $background-color;
   border-radius: $base-border-radius;
 
@@ -157,23 +157,21 @@ textarea {
     @include chatbox-header;
     border-top-right-radius: $base-border-radius;
     border-top-left-radius: $base-border-radius;
-    flex-shrink: 0;
-    /* ADD OR ENSURE THIS IS PRESENT */
+    flex: 0 0 auto; // 👈 fixed height
   }
 
   .chatbox-popup__main {
     @include chatbox-main(left, flex-start, flex-start, $base-dimension);
-    flex: 1 1 auto; // fill remaining space
-    overflow-y: auto; // 👈 make main content scrollable
-    overflow-x: hidden
+    flex: 1 1 auto; // 👈 take all remaining space
+    overflow-y: auto; // 👈 ONLY this area scrolls
+    overflow-x: hidden;
   }
 
   .chatbox-popup__footer {
     @include chatbox-footer;
     border-bottom-right-radius: $base-border-radius;
     border-bottom-left-radius: $base-border-radius;
-    flex-shrink: 0;
-    /* ADD OR ENSURE THIS IS PRESENT */
+    flex: 0 0 auto; // 👈 fixed height
   }
 }
 
@@ -300,6 +298,8 @@ progress {
 }
 
 .tasks {
+
+
   ul {
     list-style: none;
     padding: 0;
