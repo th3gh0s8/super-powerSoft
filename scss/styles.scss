@@ -85,6 +85,10 @@ $progress-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 // ================================
 // 🌐 Global styles
 // ================================
+.hidden {
+  display: none;
+}
+
 body {
   margin: 0;
   padding: 0;

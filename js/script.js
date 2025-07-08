@@ -1,8 +1,7 @@
 const chatbox = jQuery.noConflict();
+let ytPlayer; // Move outside chatbox scope so YouTube API can call it
 
-let ytPlayer; // 👈 Move outside chatbox scope so YouTube API can call it
-
-// ✅ Global YouTube API callback
+// Global YouTube API callback
 function onYouTubeIframeAPIReady() {
     ytPlayer = new YT.Player("yt-player", {
         height: "360",
@@ -23,23 +22,19 @@ chatbox(() => {
         }
     }
 
-    // ========================
     // Chatbox UI controls
-    // ========================
     chatbox(".chatbox-open").click(() => {
         chatbox(".chatbox-popup").show().attr("aria-hidden", "false");
         chatbox(".chatbox-close").show().attr("aria-hidden", "false");
         chatbox(".chatbox-open").hide();
-
-        loadTutorial("dQw4w9WgXcQ"); //  Load the video each time
+        loadTutorial("dQw4w9WgXcQ"); // Load the video each time
     });
 
     chatbox(".chatbox-close").click(() => {
         chatbox(".chatbox-popup").hide().attr("aria-hidden", "true");
         chatbox(".chatbox-close").hide().attr("aria-hidden", "true");
         chatbox(".chatbox-open").show();
-
-        if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo(); //  Stop video when closing
+        if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo(); // Stop video when closing
     });
 
     chatbox(".chatbox-maximize").click(() => {
@@ -62,7 +57,6 @@ chatbox(() => {
             chatbox(".chatbox-popup").hide().attr("aria-hidden", "true");
             chatbox(".chatbox-close").hide().attr("aria-hidden", "true");
             chatbox(".chatbox-open").show();
-
             if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo();
         }
     });
@@ -73,14 +67,11 @@ chatbox(() => {
             popup.hide().attr("aria-hidden", "true");
             chatbox(".chatbox-close").hide().attr("aria-hidden", "true");
             chatbox(".chatbox-open").show();
-
             if (ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo();
         }
     });
 
-    // ========================
     // Progress bar logic
-    // ========================
     function syncParents(container) {
         container.find(".parent-task").each(function() {
             const parentId = this.id;
@@ -90,8 +81,6 @@ chatbox(() => {
             const allChecked = $subTasks.length > 0 &&
                 $subTasks.length === $subTasks.filter(":checked").length;
             chatbox(this).prop("checked", allChecked);
-
-            // 🔒 Lock parent if all subtasks are done
             chatbox(this).prop("disabled", allChecked);
         });
     }
@@ -99,53 +88,42 @@ chatbox(() => {
     function updateProgress(container) {
         const $subTasks = container.find(".sub-task");
         const $standaloneTasks = container.find(".standalone");
-
         const totalTasks = $subTasks.length + $standaloneTasks.length;
         const completedTasks = $subTasks.filter(":checked").length +
             $standaloneTasks.filter(":checked").length;
-
         container.find(".tasks h2").text(
             `Tasks (${completedTasks}/${totalTasks} completed)`,
         );
-
         $subTasks.filter(":checked").prop("disabled", true);
         $standaloneTasks.filter(":checked").prop("disabled", true);
-
         container.find(".setup-progress").attr("max", totalTasks).val(
             completedTasks,
         );
         container.find(".progress-text").text(
             `${completedTasks} of ${totalTasks} steps`,
         );
-
         syncParents(container);
     }
 
-    // ========================
     // Checkbox syncing (dynamic)
-    // ========================
     chatbox(document).on("change", ".task-checkbox", function() {
         const isPopup = chatbox(this).closest(".chatbox-popup").length > 0;
         const otherContainer = isPopup
             ? chatbox(".chatbox-panel")
             : chatbox(".chatbox-popup");
         const index = chatbox(".task-checkbox").index(this);
-
         otherContainer.find(".task-checkbox").eq(index).prop(
             "checked",
             this.checked,
         );
-
         updateProgress(chatbox(".chatbox-popup"));
         updateProgress(chatbox(".chatbox-panel"));
     });
 
-    // ========================
-    // Toggle subtasks visibility
-    // ========================
+    // Toggle subtasks visibility when parent task label is clicked
     chatbox(document).on("click", ".parent-task + label", function() {
         const $parentLi = chatbox(this).closest("li");
-        $parentLi.toggleClass("expanded");
+        $parentLi.find(".subtasks").toggleClass("hidden");
     });
 
     // Auto expand if parent checked
@@ -164,14 +142,11 @@ chatbox(() => {
             this.checked = true;
             return;
         }
-
         const parentId = this.id;
         const isChecked = this.checked;
         const $subTasks = chatbox(`.sub-task[data-parent="${parentId}"]`);
         $subTasks.prop("checked", isChecked).prop("disabled", isChecked);
-
         if (isChecked) $this.prop("disabled", true);
-
         updateProgress(chatbox(".chatbox-popup"));
         updateProgress(chatbox(".chatbox-panel"));
     });
@@ -181,26 +156,20 @@ chatbox(() => {
         const $siblings = chatbox(`.sub-task[data-parent="${parentId}"]`);
         const allChecked =
             $siblings.length === $siblings.filter(":checked").length;
-
         const $parent = chatbox(`#${parentId}`);
         $parent.prop("checked", allChecked);
         if (allChecked) $parent.prop("disabled", true);
-
         updateProgress(chatbox(".chatbox-popup"));
         updateProgress(chatbox(".chatbox-panel"));
     });
 
-    // ========================
     // Insert template content
-    // ========================
     const template = document.querySelector("#task-template");
     if (template) {
         const popupContent = template.content.cloneNode(true);
         chatbox(".chatbox-popup").append(popupContent);
-
         const panelContent = template.content.cloneNode(true);
         chatbox(".chatbox-panel").append(panelContent);
-
         updateProgress(chatbox(".chatbox-popup"));
         updateProgress(chatbox(".chatbox-panel"));
     }
