@@ -308,7 +308,15 @@ progress {
     li {
       margin: 8px 0;
       display: flex;
-      justify-content: center;
+      flex-direction: column; // 👈 change to column for nested
+      justify-content: flex-start;
+    }
+
+    // Nested ul for subtasks
+    ul {
+      margin-left: 20px; // 👈 Indent nested lists
+      border-left: 2px dashed #ccc; // 👈 Optional vertical guide
+      padding-left: 10px;
     }
 
     label {
@@ -368,7 +376,5 @@ progress {
       border-radius: 4px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
-
-
   }
 }

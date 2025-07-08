@@ -253,7 +253,13 @@ progress::-moz-progress-bar {
 .tasks ul li {
   margin: 8px 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.tasks ul ul {
+  margin-left: 20px;
+  border-left: 2px dashed #ccc;
+  padding-left: 10px;
 }
 .tasks ul label {
   display: inline-block;

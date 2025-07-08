@@ -48,15 +48,10 @@ chatbox(() => {
         const totalTasks = $tasks.length;
         const completed = $tasks.filter(":checked").length;
 
-        // Update the tasks header in this container only
+        // Update progress text and bar in the current container only
         container.find(".tasks h2").text(
             `Tasks (${completed}/${totalTasks} completed)`,
         );
-
-        // Lock checked boxes only here
-        $tasks.filter(":checked").prop("disabled", true);
-
-        // Update the progress bar and progress text inside this container
         container.find(".setup-progress").attr("max", totalTasks).val(
             completed,
         );
@@ -70,58 +65,48 @@ chatbox(() => {
     // ========================
 
     // Sync from popup -> panel and update progress in both containers
-    chatbox(document).on(
-        "change",
-        ".chatbox-popup .task-checkbox",
-        function() {
-            const $popupTasks = chatbox(".chatbox-popup .task-checkbox");
-            const $panelTasks = chatbox(".chatbox-panel .task-checkbox");
+    chatbox(document).on("change", ".task-checkbox", function() {
+        const isPopup = chatbox(this).closest(".chatbox-popup").length > 0;
+        const otherContainer = isPopup
+            ? chatbox(".chatbox-panel")
+            : chatbox(".chatbox-popup");
+        const $this = chatbox(this);
+        const index = chatbox(".task-checkbox").index(this);
 
-            const index = $popupTasks.index(this);
-            const checked = this.checked;
+        otherContainer.find(".task-checkbox").eq(index).prop(
+            "checked",
+            this.checked,
+        );
 
-            if ($panelTasks.eq(index).length) {
-                $panelTasks.eq(index).prop("checked", checked);
-                if (checked) {
-                    $panelTasks.eq(index).prop("disabled", true);
-                }
-            }
-
-            if (checked) {
-                chatbox(this).prop("disabled", true);
-            }
-
-            updateProgress(chatbox(".chatbox-popup"));
-            updateProgress(chatbox(".chatbox-panel"));
-        },
-    );
+        updateProgress(chatbox(".chatbox-popup"));
+        updateProgress(chatbox(".chatbox-panel"));
+    });
 
     // Sync from panel -> popup and update progress in both containers
-    chatbox(document).on(
-        "change",
-        ".chatbox-panel .task-checkbox",
-        function() {
-            const $popupTasks = chatbox(".chatbox-popup .task-checkbox");
-            const $panelTasks = chatbox(".chatbox-panel .task-checkbox");
+    // Parent checkbox checks/unchecks all subtasks
+    chatbox(document).on("change", ".parent-task", function() {
+        const parentId = this.id;
+        const isChecked = this.checked;
 
-            const index = $panelTasks.index(this);
-            const checked = this.checked;
+        chatbox(`.sub-task[data-parent="${parentId}"]`).prop(
+            "checked",
+            isChecked,
+        );
+        updateProgress(chatbox(".chatbox-popup"));
+        updateProgress(chatbox(".chatbox-panel"));
+    });
 
-            if ($popupTasks.eq(index).length) {
-                $popupTasks.eq(index).prop("checked", checked);
-                if (checked) {
-                    $popupTasks.eq(index).prop("disabled", true);
-                }
-            }
+    // Subtask auto-check parent if all are checked
+    chatbox(document).on("change", ".sub-task", function() {
+        const parentId = chatbox(this).data("parent");
+        const $siblings = chatbox(`.sub-task[data-parent="${parentId}"]`);
+        const allChecked =
+            $siblings.length === $siblings.filter(":checked").length;
 
-            if (checked) {
-                chatbox(this).prop("disabled", true);
-            }
-
-            updateProgress(chatbox(".chatbox-popup"));
-            updateProgress(chatbox(".chatbox-panel"));
-        },
-    );
+        chatbox(`#${parentId}`).prop("checked", allChecked);
+        updateProgress(chatbox(".chatbox-popup"));
+        updateProgress(chatbox(".chatbox-panel"));
+    });
 
     const template = document.querySelector("#task-template");
 
@@ -138,4 +123,30 @@ chatbox(() => {
         updateProgress(chatbox(".chatbox-popup"));
         updateProgress(chatbox(".chatbox-panel"));
     }
+    // Parent task controls subtasks
+    chatbox(document).on("change", ".parent-task", function() {
+        const parentId = this.id;
+        const isChecked = this.checked;
+
+        chatbox(`.sub-task[data-parent="${parentId}"]`).prop(
+            "checked",
+            isChecked,
+        );
+
+        updateProgress(chatbox(".chatbox-popup"));
+        updateProgress(chatbox(".chatbox-panel"));
+    });
+
+    // Subtasks update parent task
+    chatbox(document).on("change", ".sub-task", function() {
+        const parentId = chatbox(this).data("parent");
+        const $siblings = chatbox(`.sub-task[data-parent="${parentId}"]`);
+        const allChecked =
+            $siblings.length === $siblings.filter(":checked").length;
+
+        chatbox(`#${parentId}`).prop("checked", allChecked);
+
+        updateProgress(chatbox(".chatbox-popup"));
+        updateProgress(chatbox(".chatbox-panel"));
+    });
 });

@@ -87,39 +87,35 @@
                 <h2>Tasks</h2>
                 <ul>
                     <li>
-                        <input type="checkbox" id="task1" class="task-checkbox" />
+                        <input type="checkbox" id="task1" class="task-checkbox parent-task" />
                         <label for="task1" class="task-label">Dependencies</label>
+                        <ul class="subtasks">
+                            <li>
+                                <input type="checkbox" id="task1-1" class="task-checkbox sub-task"
+                                    data-parent="task1" />
+                                <label for="task1-1" class="task-label">Install Node.js</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="task1-2" class="task-checkbox sub-task"
+                                    data-parent="task1" />
+                                <label for="task1-2" class="task-label">Install NPM Packages</label>
+                            </li>
+                        </ul>
                     </li>
                     <li>
-                        <input type="checkbox" id="task2" class="task-checkbox" />
-                        <label for="task2" class="task-label">Configure environment</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="task3" class="task-checkbox" />
-                        <label for="task3" class="task-label">Run initial build</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="task4" class="task-checkbox" />
-                        <label for="task4" class="task-label">Finalize setup</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="task5" class="task-checkbox" />
-                        <label for="task5" class="task-label">Verify installation</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="task6" class="task-checkbox" />
-                        <label for="task6" class="task-label">Install dependencies</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="task7" class="task-checkbox" />
-                        <label for="task7" class="task-label">Configure environment</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="task8" class="task-checkbox" />
-                        <label for="task8" class="task-label">Run initial build</label>
+                        <input type="checkbox" id="task2" class="task-checkbox parent-task" />
+                        <label for="task2" class="task-label">Configure Environment</label>
+                        <ul class="subtasks">
+                            <li>
+                                <input type="checkbox" id="task2-1" class="task-checkbox sub-task"
+                                    data-parent="task2" />
+                                <label for="task2-1" class="task-label">Set Environment Variables</label>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </section>
+
 
         </main>
 
