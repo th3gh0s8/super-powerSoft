@@ -69,8 +69,7 @@
             <h2>Welcome!</h2>
             <section class="video-tutorial">
                 <h2>Video Tutorial</h2>
-                <!-- <div id="yt-player"></div> -->
-
+                <button id="openVideoBtn">Open Video</button>
             </section>
 
             </section>
@@ -138,13 +137,30 @@
             </aside> -->
         </footer>
     </template>
+
+
+
+    <!-- Template for the floating video window -->
+    <template id="floatingVideoTemplate">
+        <div id="floatingVideoWindow" class="floating-window">
+            <div class="window-header">
+                <span>Video Tutorial</span>
+                <button id="closeVideoBtn" class="close-btn">×</button>
+            </div>
+            <div class="window-content">
+                <div id="yt-player"></div>
+            </div>
+        </div>
+    </template>
+
+
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 
     <!-- YouTube Iframe API -->
     <script src="https://www.youtube.com/iframe_api"></script>
-
 
     <!-- Custom JS -->
     <script src="js/script.js"></script>

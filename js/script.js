@@ -1,19 +1,4 @@
 const chatbox = jQuery.noConflict();
-let ytPlayer; // Move outside chatbox scope so YouTube API can call it
-
-// Global YouTube API callback
-function onYouTubeIframeAPIReady() {
-    ytPlayer = new YT.Player("yt-player", {
-        height: "360",
-        width: "640",
-        videoId: "dQw4w9WgXcQ", // Initial video
-        events: {
-            onReady: (event) => {
-                console.log("YouTube Player Ready!");
-            },
-        },
-    });
-}
 
 chatbox(() => {
     function loadTutorial(videoId) {
@@ -170,7 +155,48 @@ chatbox(() => {
         chatbox(".chatbox-popup").append(popupContent);
         const panelContent = template.content.cloneNode(true);
         chatbox(".chatbox-panel").append(panelContent);
+
         updateProgress(chatbox(".chatbox-popup"));
         updateProgress(chatbox(".chatbox-panel"));
     }
+
+    let ytPlayer;
+
+    function onYouTubeIframeAPIReady() {
+        ytPlayer = new YT.Player("yt-player", {
+            height: "360",
+            width: "640",
+            videoId: "dQw4w9WgXcQ", // Replace with your video ID
+            events: {
+                "onReady": onPlayerReady,
+            },
+        });
+    }
+
+    function onPlayerReady(event) {
+        console.log("YouTube Player Ready!");
+        event.target.playVideo();
+    }
+
+    document.getElementById("openVideoBtn").addEventListener(
+        "click",
+        function() {
+            const template = document.getElementById("floatingVideoTemplate");
+            const windowClone = template.content.cloneNode(true);
+            document.body.appendChild(windowClone);
+
+            document.getElementById("closeVideoBtn").addEventListener(
+                "click",
+                function() {
+                    const floatingWindow = document.getElementById(
+                        "floatingVideoWindow",
+                    );
+                    floatingWindow.remove();
+                    if (ytPlayer) {
+                        ytPlayer.stopVideo();
+                    }
+                },
+            );
+        },
+    );
 });
