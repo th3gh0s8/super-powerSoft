@@ -179,6 +179,19 @@ textarea::placeholder {
   flex: 0 0 auto;
 }
 
+.chatbox-footer {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  padding: 16px;
+  border-top: 1px solid #ddd;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  flex: 0 0 auto;
+}
+
 progress {
   -webkit-appearance: none;
   appearance: none;

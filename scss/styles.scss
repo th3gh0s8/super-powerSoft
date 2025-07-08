@@ -204,6 +204,13 @@ textarea {
   }
 }
 
+.chatbox-footer {
+  @include chatbox-footer;
+  border-bottom-right-radius: $base-border-radius;
+  border-bottom-left-radius: $base-border-radius;
+  flex: 0 0 auto; // fixed height
+}
+
 // Main progress bar styling
 progress {
   -webkit-appearance: none;
