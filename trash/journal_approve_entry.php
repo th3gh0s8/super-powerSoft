@@ -88,27 +88,17 @@ if($sql_getPrintPage->num_rows == TRUE){
 }
 
 
-if (isset($_POST['jentry_id'], $_POST['action'])) {
+if(isset($_POST['jentry_id'], $_POST['action'])) {
     $jentry_id = intval($_POST['jentry_id']);
+    // Use 1 or 0 based on action
+    $status = ($_POST['action'] === 'approve') ? 1 : 0;
     $approved_by = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'system';
     $approved_dateTime = date('Y-m-d H:i:s');
 
-    // Map actions to integers
-    if ($_POST['action'] === 'approve') {
-        $status = 1; // Approved
-    } elseif ($_POST['action'] === 'reject') {
-        $status = 2; // Rejected
-    } else {
-        $status = 0; // Pending (if you want to reset)
-    }
-
     $stmt = $mysqli->prepare("UPDATE jentry SET approved_status = ?, approved_by = ?, approved_dateTime = ? WHERE ID = ?");
-    $stmt->bind_param("issi", $status, $approved_by, $approved_dateTime, $jentry_id);
-    $stmt->execute();
+    $stmt->bind_param("issi", $status, $approved_by, $approved_dateTime, $jentry_id); // 'i' for integer status
+    $success = $stmt->execute();
     $stmt->close();
-
-    // Optional: Set flash messages, redirect, etc.
-
 
     // echo $success ? 'ok' : 'fail';
 }
@@ -118,32 +108,19 @@ if (isset($_POST['jentry_id'], $_POST['action'])) {
 $query = "
 SELECT
 Date AS transaction_date,
-
-
-IFNULL(
-    (SELECT AccName FROM jentry AS j2
-    WHERE j2.VNo = j1.VNo AND j2.Credit != 0 LIMIT 1),
-'cash on hand'
-) AS from_journal,
-
-IFNULL(
-    (SELECT AccName FROM jentry AS j3
-    WHERE j3.VNo = j1.VNo AND j3.Debit != 0 LIMIT 1),
-'cash on hand'
-) AS to_journal,
-
+(SELECT AccName FROM jentry AS j2 WHERE j2.ID = j1.ID AND j2.Debit > 0 LIMIT 1) AS from_journal,
+(SELECT AccName FROM jentry AS j3 WHERE j3.ID = j1.ID AND j3.Credit > 0 LIMIT 1) AS to_journal,
 Description,
-IFNULL(Credit, Debit) AS amount,
+IFNULL(Debit, Credit) AS amount,
 userID,
 recodDate,
 ID, approved_status
 FROM jentry AS j1
-WHERE `br_id`='$br_id' AND jentry_delete = 0 AND approved_status =0
+WHERE jentry_delete = 0 AND approved_status IS NULL
 GROUP BY j1.ID
 ORDER BY Date DESC
 LIMIT 100
 ";
-
 $result = $mysqli->query($query);
 ?>
 
@@ -530,15 +507,15 @@ else
 <td><?php echo htmlspecialchars($row['userID']); ?></td>
 <td><?php echo htmlspecialchars($row['recodDate']); ?></td>
 <td>
-<?php if ($row['approved_status'] == 0): ?>
+<?php if ($row['approved_status'] != 'Approved' && $row['approved_status'] != 'Rejected'): ?>
 <form method="post" action="" style="display:inline;">
 <input type="hidden" name="jentry_id" value="<?php echo $row['ID']; ?>">
 <button type="submit" name="action" value="approve" class="btn btn-success btn-xs">Approve</button>
 <button type="submit" name="action" value="reject" class="btn btn-danger btn-xs">Reject</button>
 </form>
-<?php elseif ($row['approved_status'] == 1): ?>
+<?php elseif ($row['approved_status'] == 'Approved'): ?>
 <span class="label label-success">Approved</span>
-<?php elseif ($row['approved_status'] == 2): ?>
+<?php elseif ($row['approved_status'] == 'Rejected'): ?>
 <span class="label label-danger">Rejected</span>
 <?php endif; ?>
 </td>
@@ -1474,3 +1451,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php $mysqli->close(); ?>
+
