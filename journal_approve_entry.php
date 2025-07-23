@@ -1,8 +1,8 @@
-
 <?php
 $title = 'Approve Journal Entry';
 $pageRights = 'journal_approve_entry';
 include('path.php');
+
 include('includeFile.php');
 
 // Function to get the count of entries by status
@@ -21,10 +21,7 @@ $pendingCount = getEntryCount($mysqli, $br_id, 0);
 $approvedCount = getEntryCount($mysqli, $br_id, 1);
 $rejectedCount = getEntryCount($mysqli, $br_id, 2);
 
-// Get the date value from the input field
-$bil_date = isset($_GET['bil_date']) ? $_GET['bil_date'] : date("Y-m-d");
-
-// Fetch Journal Entries with date filtering
+// Fetch Journal Entries
 $query = "
 SELECT
     Date AS transaction_date,
@@ -36,18 +33,18 @@ SELECT
     recodDate,
     ID, approved_status
 FROM jentry AS j1
-WHERE `br_id`=? AND jentry_delete = 0 AND Date = ?
+WHERE `br_id`=? AND jentry_delete = 0
 ORDER BY Date DESC
 LIMIT 100
 ";
 
 $stmt = $mysqli->prepare($query);
-$stmt->bind_param("is", $br_id, $bil_date);
+$stmt->bind_param("i", $br_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $stmt->close();
-?>
 
+?>
 
 <input type="text" name="rgt_edit" class="boxb rgt_edit" id="rgt_edit" value="<?php echo $page_rights; ?>" hidden border="0px" />
 
@@ -291,7 +288,7 @@ display: none
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <label>Date</label>
-                                                 <?php
+                                                    <?php
                                                     if ($user_type == 'Admin' || $user_type == 'SuperAdmin') {
                                                         echo '<div class="controls" style="padding-top:0px;margin-bottom:5px;margin-left:-15px;">
                                                                 <div align="left" class="col-sm-10 input-append date dpk_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="bil_date" data-link-format="yyyy-mm-dd">
@@ -321,7 +318,6 @@ display: none
                                                         }
                                                     }
                                                     ?>
- 
                                                 </div>
                                             </div>
 
@@ -364,19 +360,26 @@ display: none
                                                                 <div class="tab-content">
                                                                     <div id="pending" class="tab-pane fade in active">
                                                                         <div class="row" style="margin-bottom: 10px;">
-                                                                            
+                                                                            <div class="col-md-6">
+                                                                                <label>From Date:</label>
+                                                                                <input type="date" id="from-date" class="form-control">
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <label>To Date:</label>
+                                                                                <input type="date" id="to-date" class="form-control">
+                                                                            </div>
                                                                         </div>
                                                                         <table class="table table-bordered bootstrap-datatable responsive table-hover custmTB2">
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>Date</th>
-                                                                                    <th>From Journal       
+                                                                                    <th>From Journal
                                                                                         <input type="date" id="from-date" class="form-control">
                                                                                     </th>
                                                                                     <th>To Journal
-                                                                                        <input type="date" id="to-date" class="form-control">
-                                                                                    </th> 
-                                                                                    
+                                                                                        <input type="date" id="from-date" class="form-control">
+                                                                                    </th>
+                                                                                    <th>Description</th>
                                                                                     <th style="text-align:right;">Amount</th>
                                                                                     <th>User</th>
                                                                                     <th>Recorded Date</th>
@@ -391,23 +394,30 @@ display: none
                                                                     <!-- Similar date filters for approved and rejected tabs -->
                                                                     <div id="approved" class="tab-pane fade">
                                                                         <div class="row" style="margin-bottom: 10px;">
-                                                                          
+                                                                            <div class="col-md-6">
+                                                                                <label>From Date:</label>
+                                                                                <input type="date" id="from-date-approved" class="form-control">
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <label>To Date:</label>
+                                                                                <input type="date" id="to-date-approved" class="form-control">
+                                                                            </div>
                                                                         </div>
                                                                         <table class="table table-bordered bootstrap-datatable responsive table-hover custmTB2">
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>Date</th>
-                                                                                    <th>From Journal       
+                                                                                    <th>From Journal
                                                                                         <input type="date" id="from-date" class="form-control">
                                                                                     </th>
                                                                                     <th>To Journal
-                                                                                        <input type="date" id="to-date" class="form-control">
+                                                                                        <input type="date" id="from-date" class="form-control">
                                                                                     </th>
                                                                                     <th>Description</th>
                                                                                     <th style="text-align:right;">Amount</th>
                                                                                     <th>User</th>
                                                                                     <th>Recorded Date</th>
-                                                                                    <th>Action</th>
+                                                                                    <th>Status</th>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody id="approved-entries">
@@ -417,23 +427,30 @@ display: none
                                                                     </div>
                                                                     <div id="rejected" class="tab-pane fade">
                                                                         <div class="row" style="margin-bottom: 10px;">
-                                                                            
+                                                                            <div class="col-md-6">
+                                                                                <label>From Date:</label>
+                                                                                <input type="date" id="from-date-rejected" class="form-control">
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <label>To Date:</label>
+                                                                                <input type="date" id="to-date-rejected" class="form-control">
+                                                                            </div>
                                                                         </div>
                                                                         <table class="table table-bordered bootstrap-datatable responsive table-hover custmTB2">
                                                                             <thead>
-                                                                                 <tr>
+                                                                                <tr>
                                                                                     <th>Date</th>
-                                                                                    <th>From Journal       
+                                                                                    <th>From Journal
                                                                                         <input type="date" id="from-date" class="form-control">
                                                                                     </th>
                                                                                     <th>To Journal
-                                                                                        <input type="date" id="to-date" class="form-control">
+                                                                                        <input type="date" id="from-date" class="form-control">
                                                                                     </th>
                                                                                     <th>Description</th>
                                                                                     <th style="text-align:right;">Amount</th>
                                                                                     <th>User</th>
                                                                                     <th>Recorded Date</th>
-                                                                                    <th>Action</th>
+                                                                                    <th>Status</th>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody id="rejected-entries">
@@ -509,45 +526,62 @@ display: none
                     minViewMode: "months"
                 });
             </script>
+
+
 <script>
 $(document).ready(function() {
-    // Function to load entries with date filtering and sorting
-    function loadEntries(status, fromDateId, toDateId, targetId) {
-        var fromDate = $(fromDateId).val();
-        var toDate = $(toDateId).val();
-
+    // Function to update badges
+    function updateBadges() {
         $.ajax({
             url: 'ajx/fetch_entries.php',
             method: 'GET',
-            data: {
-                action: 'fetch_entries',
-                status: status,
-                from_date: fromDate,
-                to_date: toDate
-            },
+            data: { action: 'get_entry_counts' },
+            dataType: 'json',
             success: function(data) {
-                $(targetId).html(data);
-                updateBadges();
-            },
-            error: function(xhr, status, error) {
-                console.error('Error loading entries:', error);
+                $('#pending-badge').text(data.pending);
+                $('#approved-badge').text(data.approved);
+                $('#rejected-badge').text(data.rejected);
             }
         });
     }
 
     // Function to load pending entries
     function loadPendingEntries() {
-        loadEntries('pending', '#from-date', '#to-date', '#pending-entries');
+        $.ajax({
+            url: 'ajx/fetch_entries.php',
+            method: 'GET',
+            data: { action: 'fetch_entries', status: 'pending' },
+            success: function(data) {
+                $('#pending-entries').html(data);
+                updateBadges(); // Update badges after loading entries
+            }
+        });
     }
 
     // Function to load approved entries
     function loadApprovedEntries() {
-        loadEntries('approved', '#from-date-approved', '#to-date-approved', '#approved-entries');
+        $.ajax({
+            url: 'ajx/fetch_entries.php',
+            method: 'GET',
+            data: { action: 'fetch_entries', status: 'approved' },
+            success: function(data) {
+                $('#approved-entries').html(data);
+                updateBadges(); // Update badges after loading entries
+            }
+        });
     }
 
     // Function to load rejected entries
     function loadRejectedEntries() {
-        loadEntries('rejected', '#from-date-rejected', '#to-date-rejected', '#rejected-entries');
+        $.ajax({
+            url: 'ajx/fetch_entries.php',
+            method: 'GET',
+            data: { action: 'fetch_entries', status: 'rejected' },
+            success: function(data) {
+                $('#rejected-entries').html(data);
+                updateBadges(); // Update badges after loading entries
+            }
+        });
     }
 
     // Load pending entries by default
@@ -565,10 +599,14 @@ $(document).ready(function() {
         }
     });
 
-    // Add event listeners for date changes
+     // Add event listeners for date changes
     $('#from-date, #to-date').change(loadPendingEntries);
     $('#from-date-approved, #to-date-approved').change(loadApprovedEntries);
     $('#from-date-rejected, #to-date-rejected').change(loadRejectedEntries);
+
+
+    // Update badges every 5 seconds
+    setInterval(updateBadges, 5000);
 
     // Handle approve/reject button clicks
     $(document).on('click', '.ajax-approve-btn', function(event) {
@@ -600,15 +638,14 @@ $(document).ready(function() {
                         } else if (data.new_status === 'Rejected') {
                             td.html('<span class="label label-danger">Rejected</span>');
                         }
-                        updateBadges();
+                        updateBadges(); // Update badges after approving/rejecting an entry
                     } else {
                         alert('Error: ' + (data.msg || 'Unknown error'));
                         buttons.prop('disabled', false);
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function() {
                     alert('An error occurred while processing your request.');
-                    console.error('Error approving/rejecting entry:', error);
                     buttons.prop('disabled', false);
                 }
             });
