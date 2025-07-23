@@ -4,10 +4,10 @@ require_once $path . '../function.php';
 require_once $path . '../session_file.php';
 require_once $path . 'connection.php';
 
-header('Content-Type: application/json');
 
-if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-    if (isset($_POST['jentry_id'], $_POST['action'])) {
+
+
+        if (isset($_POST['jentry_id'], $_POST['action'])) {
         $jentry_id = intval($_POST['jentry_id']);
         $approved_by = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'system';
         $approved_dateTime = date('Y-m-d H:i:s');
@@ -34,7 +34,6 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         $stmt->close();
         exit();
     }
-}
 
 
 

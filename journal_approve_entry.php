@@ -1,8 +1,8 @@
+
 <?php
 $title = 'Approve Journal Entry';
 $pageRights = 'journal_approve_entry';
 include('path.php');
-
 include('includeFile.php');
 
 // Function to get the count of entries by status
@@ -21,7 +21,10 @@ $pendingCount = getEntryCount($mysqli, $br_id, 0);
 $approvedCount = getEntryCount($mysqli, $br_id, 1);
 $rejectedCount = getEntryCount($mysqli, $br_id, 2);
 
-// Fetch Journal Entries
+// Get the date value from the input field
+$bil_date = isset($_GET['bil_date']) ? $_GET['bil_date'] : date("Y-m-d");
+
+// Fetch Journal Entries with date filtering
 $query = "
 SELECT
     Date AS transaction_date,
@@ -33,18 +36,18 @@ SELECT
     recodDate,
     ID, approved_status
 FROM jentry AS j1
-WHERE `br_id`=? AND jentry_delete = 0
+WHERE `br_id`=? AND jentry_delete = 0 AND Date = ?
 ORDER BY Date DESC
 LIMIT 100
 ";
 
 $stmt = $mysqli->prepare($query);
-$stmt->bind_param("i", $br_id);
+$stmt->bind_param("is", $br_id, $bil_date);
 $stmt->execute();
 $result = $stmt->get_result();
 $stmt->close();
-
 ?>
+
 
 <input type="text" name="rgt_edit" class="boxb rgt_edit" id="rgt_edit" value="<?php echo $page_rights; ?>" hidden border="0px" />
 
@@ -288,7 +291,7 @@ display: none
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <label>Date</label>
-                                                    <?php
+                                                 <?php
                                                     if ($user_type == 'Admin' || $user_type == 'SuperAdmin') {
                                                         echo '<div class="controls" style="padding-top:0px;margin-bottom:5px;margin-left:-15px;">
                                                                 <div align="left" class="col-sm-10 input-append date dpk_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="bil_date" data-link-format="yyyy-mm-dd">
@@ -318,6 +321,7 @@ display: none
                                                         }
                                                     }
                                                     ?>
+ 
                                                 </div>
                                             </div>
 
@@ -335,88 +339,114 @@ display: none
                                                     <?php endif; ?>
 
 
-                                                        <div class="container">
-                                                            <ul class="nav nav-tabs">
-                                                                <li class="active">
-                                                                    <a data-toggle="tab" href="#pending">
-                                                                        Pending <span class="badge"><?php echo $pendingCount; ?></span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a data-toggle="tab" href="#approved">
-                                                                        Approved <span class="badge"><?php echo $approvedCount; ?></span>
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a data-toggle="tab" href="#rejected">
-                                                                        Rejected <span class="badge"><?php echo $rejectedCount; ?></span>
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
 
-                                                            <div class="tab-content">
-                                                                <div id="pending" class="tab-pane fade in active">
-                                                                    <!-- Pending entries will be displayed here -->
-                                                                    <table class="table table-bordered bootstrap-datatable responsive table-hover custmTB2">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Date</th>
-                                                                                <th>From Journal</th>
-                                                                                <th>To Journal</th>
-                                                                                <th>Description</th>
-                                                                                <th style="text-align:right;">Amount</th>
-                                                                                <th>User</th>
-                                                                                <th>Recorded Date</th>
-                                                                                <th>Action</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody id="pending-entries">
-                                                                            <!-- Pending entries will be loaded here via JavaScript -->
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                                <div id="approved" class="tab-pane fade">
-                                                                    <!-- Approved entries will be displayed here -->
-                                                                    <table class="table table-bordered bootstrap-datatable responsive table-hover custmTB2">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Date</th>
-                                                                                <th>From Journal</th>
-                                                                                <th>To Journal</th>
-                                                                                <th>Description</th>
-                                                                                <th style="text-align:right;">Amount</th>
-                                                                                <th>User</th>
-                                                                                <th>Recorded Date</th>
-                                                                                <th>Status</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody id="approved-entries">
-                                                                            <!-- Approved entries will be loaded here via JavaScript -->
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                                <div id="rejected" class="tab-pane fade">
-                                                                    <!-- Rejected entries will be displayed here -->
-                                                                    <table class="table table-bordered bootstrap-datatable responsive table-hover custmTB2">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Date</th>
-                                                                                <th>From Journal</th>
-                                                                                <th>To Journal</th>
-                                                                                <th>Description</th>
-                                                                                <th style="text-align:right;">Amount</th>
-                                                                                <th>User</th>
-                                                                                <th>Recorded Date</th>
-                                                                                <th>Status</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody id="rejected-entries">
-                                                                            <!-- Rejected entries will be loaded here via JavaScript -->
-                                                                        </tbody>
-                                                                    </table>
+
+
+                                                     
+                                                            <div class="container">
+                                                                <ul class="nav nav-tabs">
+                                                                    <li class="active">
+                                                                        <a data-toggle="tab" href="#pending">
+                                                                            Pending <span class="badge" id="pending-badge"><?php echo $pendingCount; ?></span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a data-toggle="tab" href="#approved">
+                                                                            Approved <span class="badge" id="approved-badge"><?php echo $approvedCount; ?></span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a data-toggle="tab" href="#rejected">
+                                                                            Rejected <span class="badge" id="rejected-badge"><?php echo $rejectedCount; ?></span>
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                                <div class="tab-content">
+                                                                    <div id="pending" class="tab-pane fade in active">
+                                                                        <div class="row" style="margin-bottom: 10px;">
+                                                                            
+                                                                        </div>
+                                                                        <table class="table table-bordered bootstrap-datatable responsive table-hover custmTB2">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Date</th>
+                                                                                    <th>From Journal       
+                                                                                        <input type="date" id="from-date" class="form-control">
+                                                                                    </th>
+                                                                                    <th>To Journal
+                                                                                        <input type="date" id="to-date" class="form-control">
+                                                                                    </th> 
+                                                                                    
+                                                                                    <th style="text-align:right;">Amount</th>
+                                                                                    <th>User</th>
+                                                                                    <th>Recorded Date</th>
+                                                                                    <th>Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody id="pending-entries">
+                                                                                <!-- Pending entries will be loaded here via JavaScript -->
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                    <!-- Similar date filters for approved and rejected tabs -->
+                                                                    <div id="approved" class="tab-pane fade">
+                                                                        <div class="row" style="margin-bottom: 10px;">
+                                                                          
+                                                                        </div>
+                                                                        <table class="table table-bordered bootstrap-datatable responsive table-hover custmTB2">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Date</th>
+                                                                                    <th>From Journal       
+                                                                                        <input type="date" id="from-date" class="form-control">
+                                                                                    </th>
+                                                                                    <th>To Journal
+                                                                                        <input type="date" id="to-date" class="form-control">
+                                                                                    </th>
+                                                                                    <th>Description</th>
+                                                                                    <th style="text-align:right;">Amount</th>
+                                                                                    <th>User</th>
+                                                                                    <th>Recorded Date</th>
+                                                                                    <th>Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody id="approved-entries">
+                                                                                <!-- Approved entries will be loaded here via JavaScript -->
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                    <div id="rejected" class="tab-pane fade">
+                                                                        <div class="row" style="margin-bottom: 10px;">
+                                                                            
+                                                                        </div>
+                                                                        <table class="table table-bordered bootstrap-datatable responsive table-hover custmTB2">
+                                                                            <thead>
+                                                                                 <tr>
+                                                                                    <th>Date</th>
+                                                                                    <th>From Journal       
+                                                                                        <input type="date" id="from-date" class="form-control">
+                                                                                    </th>
+                                                                                    <th>To Journal
+                                                                                        <input type="date" id="to-date" class="form-control">
+                                                                                    </th>
+                                                                                    <th>Description</th>
+                                                                                    <th style="text-align:right;">Amount</th>
+                                                                                    <th>User</th>
+                                                                                    <th>Recorded Date</th>
+                                                                                    <th>Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody id="rejected-entries">
+                                                                                <!-- Rejected entries will be loaded here via JavaScript -->
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+
+
+
+
 
                                                     
                                                     
@@ -479,90 +509,45 @@ display: none
                     minViewMode: "months"
                 });
             </script>
-
-
-<script>
-
-                $(document).on('click', '.ajax-approve-btn', function(event) {
-    event.preventDefault();
-    var jentry_id = $(this).data('id');
-    var action = $(this).data('action');
-    var buttons = $(this);
-
-    // Show confirmation dialog
-    var confirmationMessage = action === 'approve' ? 'Are you sure you want to approve this entry?' : 'Are you sure you want to reject this entry?';
-    if (confirm(confirmationMessage)) {
-        // Disable buttons to prevent multiple clicks
-        buttons.prop('disabled', true);
-
-        $.ajax({
-            url: 'ajx/journal_approve_entry.php',
-            method: 'POST',
-            data: {
-                jentry_id: jentry_id,
-                action: action,
-                btn: "ApproveBtn"
-            },
-            dataType: 'json',
-            success: function(data) {
-                if (data.status === 'ok') {
-                    var td = buttons.closest('td');
-                    if (data.new_status === 'Approved') {
-                        td.html('<span class="label label-success">Approved</span>');
-                    } else if (data.new_status === 'Rejected') {
-                        td.html('<span class="label label-danger">Rejected</span>');
-                    }
-                } else {
-                    alert('Error: ' + (data.msg || 'Unknown error'));
-                    buttons.prop('disabled', false);
-                }
-            },
-            error: function() {
-                alert('An error occurred while processing your request.');
-                buttons.prop('disabled', false);
-            }
-        });
-    }
-});
-   
-</script>
-
 <script>
 $(document).ready(function() {
-    // Function to load pending entries
-    function loadPendingEntries() {
+    // Function to load entries with date filtering and sorting
+    function loadEntries(status, fromDateId, toDateId, targetId) {
+        var fromDate = $(fromDateId).val();
+        var toDate = $(toDateId).val();
+
         $.ajax({
             url: 'ajx/fetch_entries.php',
             method: 'GET',
-            data: { status: 'pending' },
+            data: {
+                action: 'fetch_entries',
+                status: status,
+                from_date: fromDate,
+                to_date: toDate
+            },
             success: function(data) {
-                $('#pending-entries').html(data);
+                $(targetId).html(data);
+                updateBadges();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading entries:', error);
             }
         });
+    }
+
+    // Function to load pending entries
+    function loadPendingEntries() {
+        loadEntries('pending', '#from-date', '#to-date', '#pending-entries');
     }
 
     // Function to load approved entries
     function loadApprovedEntries() {
-        $.ajax({
-            url: 'ajx/fetch_entries.php',
-            method: 'GET',
-            data: { status: 'approved' },
-            success: function(data) {
-                $('#approved-entries').html(data);
-            }
-        });
+        loadEntries('approved', '#from-date-approved', '#to-date-approved', '#approved-entries');
     }
 
     // Function to load rejected entries
     function loadRejectedEntries() {
-        $.ajax({
-            url: 'ajx/fetch_entries.php',
-            method: 'GET',
-            data: { status: 'rejected' },
-            success: function(data) {
-                $('#rejected-entries').html(data);
-            }
-        });
+        loadEntries('rejected', '#from-date-rejected', '#to-date-rejected', '#rejected-entries');
     }
 
     // Load pending entries by default
@@ -577,6 +562,56 @@ $(document).ready(function() {
             loadApprovedEntries();
         } else if (target === "#rejected") {
             loadRejectedEntries();
+        }
+    });
+
+    // Add event listeners for date changes
+    $('#from-date, #to-date').change(loadPendingEntries);
+    $('#from-date-approved, #to-date-approved').change(loadApprovedEntries);
+    $('#from-date-rejected, #to-date-rejected').change(loadRejectedEntries);
+
+    // Handle approve/reject button clicks
+    $(document).on('click', '.ajax-approve-btn', function(event) {
+        event.preventDefault();
+        var jentry_id = $(this).data('id');
+        var action = $(this).data('action');
+        var buttons = $(this);
+
+        // Show confirmation dialog
+        var confirmationMessage = action === 'approve' ? 'Are you sure you want to approve this entry?' : 'Are you sure you want to reject this entry?';
+        if (confirm(confirmationMessage)) {
+            // Disable buttons to prevent multiple clicks
+            buttons.prop('disabled', true);
+
+            $.ajax({
+                url: 'ajx/journal_approve_entry.php',
+                method: 'POST',
+                data: {
+                    jentry_id: jentry_id,
+                    action: action,
+                    btn: "ApproveBtn"
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        var td = buttons.closest('td');
+                        if (data.new_status === 'Approved') {
+                            td.html('<span class="label label-success">Approved</span>');
+                        } else if (data.new_status === 'Rejected') {
+                            td.html('<span class="label label-danger">Rejected</span>');
+                        }
+                        updateBadges();
+                    } else {
+                        alert('Error: ' + (data.msg || 'Unknown error'));
+                        buttons.prop('disabled', false);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('An error occurred while processing your request.');
+                    console.error('Error approving/rejecting entry:', error);
+                    buttons.prop('disabled', false);
+                }
+            });
         }
     });
 });
