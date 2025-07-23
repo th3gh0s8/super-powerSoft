@@ -1,29 +1,18 @@
 <?php
 $title = 'Approve Journal Entry';
 $pageRights = 'journal_approve_entry';
-include('path.php');
 
+// fetch_entries.php
+include('path.php');
 include('includeFile.php');
 
-// Function to get the count of entries by status
-function getEntryCount($mysqli, $br_id, $status) {
-    $query = "SELECT COUNT(*) AS count FROM jentry WHERE `br_id`=? AND jentry_delete = 0 AND approved_status = ?";
-    $stmt = $mysqli->prepare($query);
-    $stmt->bind_param("ii", $br_id, $status);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    $stmt->close();
-    return $row['count'];
-}
+$action = $_GET['action'];
+$status = $_GET['status'];
+$fromDate = $_GET['from_date'];
+$toDate = $_GET['to_date'];
+$br_id = $_SESSION['br_id']; // Assuming br_id is stored in the session
 
-$pendingCount = getEntryCount($mysqli, $br_id, 0);
-$approvedCount = getEntryCount($mysqli, $br_id, 1);
-$rejectedCount = getEntryCount($mysqli, $br_id, 2);
-
-// Fetch Journal Entries
-$query = "
-SELECT
+$query = "SELECT
     Date AS transaction_date,
     IFNULL((SELECT AccName FROM jentry AS j2 WHERE j2.VNo = j1.VNo AND j2.Debit != 0 LIMIT 1), 'cash on hand') AS from_journal,
     IFNULL((SELECT AccName FROM jentry AS j3 WHERE j3.VNo = j1.VNo AND j3.Credit != 0 LIMIT 1), 'cash on hand') AS to_journal,
@@ -33,16 +22,32 @@ SELECT
     recodDate,
     ID, approved_status
 FROM jentry AS j1
-WHERE `br_id`=? AND jentry_delete = 0
-ORDER BY Date DESC
-LIMIT 100
-";
+WHERE `br_id`=? AND jentry_delete = 0 AND approved_status = ?";
+
+$params = array($br_id, $status);
+$types = "ii";
+
+if (!empty($fromDate) && !empty($toDate)) {
+    $query .= " AND Date BETWEEN ? AND ?";
+    $params[] = $fromDate;
+    $params[] = $toDate;
+    $types .= "ss";
+}
+
+$query .= " ORDER BY Date DESC"; // Sort by date in descending order
 
 $stmt = $mysqli->prepare($query);
-$stmt->bind_param("i", $br_id);
+$stmt->bind_param($types, ...$params);
 $stmt->execute();
 $result = $stmt->get_result();
-$stmt->close();
+
+// Fetch and return the results
+$entries = [];
+while ($row = $result->fetch_assoc()) {
+    $entries[] = $row;
+}
+
+echo json_encode($entries);
 
 ?>
 
@@ -545,44 +550,104 @@ $(document).ready(function() {
         });
     }
 
+ 
     // Function to load pending entries
-    function loadPendingEntries() {
-        $.ajax({
-            url: 'ajx/fetch_entries.php',
-            method: 'GET',
-            data: { action: 'fetch_entries', status: 'pending' },
-            success: function(data) {
-                $('#pending-entries').html(data);
-                updateBadges(); // Update badges after loading entries
-            }
-        });
-    }
+function loadPendingEntries() {
+    var fromDate = $('#from-date').val();
+    var toDate = $('#to-date').val();
 
-    // Function to load approved entries
-    function loadApprovedEntries() {
-        $.ajax({
-            url: 'ajx/fetch_entries.php',
-            method: 'GET',
-            data: { action: 'fetch_entries', status: 'approved' },
-            success: function(data) {
-                $('#approved-entries').html(data);
-                updateBadges(); // Update badges after loading entries
-            }
-        });
-    }
+    console.log('From Date:', fromDate); // Debugging
+    console.log('To Date:', toDate); // Debugging
 
-    // Function to load rejected entries
-    function loadRejectedEntries() {
-        $.ajax({
-            url: 'ajx/fetch_entries.php',
-            method: 'GET',
-            data: { action: 'fetch_entries', status: 'rejected' },
-            success: function(data) {
-                $('#rejected-entries').html(data);
-                updateBadges(); // Update badges after loading entries
-            }
-        });
-    }
+    $.ajax({
+        url: 'ajx/fetch_entries.php',
+        method: 'GET',
+        data: {
+            action: 'fetch_entries',
+            status: 'pending',
+            from_date: fromDate,
+            to_date: toDate
+        },
+        success: function(data) {
+            console.log('AJAX Response:', data); // Debugging
+            $('#pending-entries').html(data);
+            updateBadges(); // Update badges after loading entries
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error); // Debugging
+        }
+    });
+}
+
+// Function to load approved entries
+function loadApprovedEntries() {
+    var fromDate = $('#from-date-approved').val();
+    var toDate = $('#to-date-approved').val();
+
+    console.log('From Date (Approved):', fromDate); // Debugging
+    console.log('To Date (Approved):', toDate); // Debugging
+
+    $.ajax({
+        url: 'ajx/fetch_entries.php',
+        method: 'GET',
+        data: {
+            action: 'fetch_entries',
+            status: 'approved',
+            from_date: fromDate,
+            to_date: toDate
+        },
+        success: function(data) {
+            console.log('AJAX Response (Approved):', data); // Debugging
+            $('#approved-entries').html(data);
+            updateBadges(); // Update badges after loading entries
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error (Approved):', status, error); // Debugging
+        }
+    });
+}
+
+// Function to load rejected entries
+function loadRejectedEntries() {
+    var fromDate = $('#from-date-rejected').val();
+    var toDate = $('#to-date-rejected').val();
+
+    console.log('From Date (Rejected):', fromDate); // Debugging
+    console.log('To Date (Rejected):', toDate); // Debugging
+
+    $.ajax({
+        url: 'ajx/fetch_entries.php',
+        method: 'GET',
+        data: {
+            action: 'fetch_entries',
+            status: 'rejected',
+            from_date: fromDate,
+            to_date: toDate
+        },
+        success: function(data) {
+            console.log('AJAX Response (Rejected):', data); // Debugging
+            $('#rejected-entries').html(data);
+            updateBadges(); // Update badges after loading entries
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error (Rejected):', status, error); // Debugging
+        }
+    });
+}
+
+// Add event listeners for date changes
+$('#from-date, #to-date').change(function() {
+    loadPendingEntries();
+});
+
+$('#from-date-approved, #to-date-approved').change(function() {
+    loadApprovedEntries();
+});
+
+$('#from-date-rejected, #to-date-rejected').change(function() {
+    loadRejectedEntries();
+});
+
 
     // Load pending entries by default
     loadPendingEntries();
