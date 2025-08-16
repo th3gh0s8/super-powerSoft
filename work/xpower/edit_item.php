@@ -428,10 +428,10 @@ if (empty($_GET['page']) && empty($showCount)) {
 				loadUrlData();
 			})
 
-			function loadUrlData(){
+			function loadUrlData() {
 				var params = new window.URLSearchParams(window.location.search);
-				var showEntries  = $('.showEntries ').val();
-				showEntries = showEntries==''? 50:showEntries;
+				var showEntries = $('.showEntries ').val();
+				showEntries = showEntries == '' ? 50 : showEntries;
 				if ($("#itemCat option:selected").val() != '') {
 					window.location.href = "edit_item.php?page=1&catID=" + encodeURIComponent($("#itemCat option:selected").val()) + "&showCount=" + showEntries + ""
 				} else {
@@ -1214,7 +1214,6 @@ if (empty($_GET['page']) && empty($showCount)) {
 				$("#myTables tbody tr").each(function(index) {
 					var codeInput = $(this).find("td input").eq(0);
 					if (codeInput.is(":enabled")) {
-						alert(`2`)
 						var code = codeInput.attr("itmCode");
 						var id = codeInput.attr("itmtb");
 						var itmName = codeInput.val();
@@ -1364,6 +1363,8 @@ if (empty($_GET['page']) && empty($showCount)) {
 
 
 			});
+
+			/*
 			$(document).on('click', '.edit', function() {
 				var thisVal = $(this).attr('edit')
 				$('.dis_' + thisVal).prop('disabled', false);
@@ -1383,7 +1384,34 @@ if (empty($_GET['page']) && empty($showCount)) {
 					$('.dis_' + thisVal).prop('disabled', false);
 					$button.html('<i class="fa fa-close" style="color:red;"></i>');
 				}
+			});*/
+
+			// Checkbox toggles
+			$(document).on('change', '.row-toggle', function() {
+				var itmCode = $(this).data('itm_code');
+				$('.dis_' + itmCode).prop('disabled', !$(this).is(':checked'));
 			});
+
+			// (Optional) edit button toggle remains as-is
+			$(document).on('click', '.edit', function() {
+    var $button = $(this);
+    var $row = $button.closest('tr'); // select the row of the clicked button
+
+    if ($button.hasClass('btn-light')) {
+        // Switch to edit mode
+        $button.removeClass('btn-light').addClass('btn-primary');
+        $row.find('input').attr('disabled', true).attr('readonly', true); // disable all inputs in the row
+        $button.html('<i class="fa fa-edit"></i>');
+    } else {
+        // Switch to view mode
+        $button.removeClass('btn-primary').addClass('btn-light');
+        $row.find('input').removeAttr('disabled').removeAttr('readonly'); // enable all inputs in the row
+        $button.html('<i class="fa fa-close" style="color:red;"></i>');
+    }
+});
+
+
+
 
 			// $(document).on('click', '.editInput', function() {
 			// 	var thisVal = $(this).attr('editInput');
