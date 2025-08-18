@@ -1,13 +1,15 @@
 <?php
-	$title = 'Gain & Loss by Category';
+
+
+$title = 'Gain & Loss by Category';
 	include ('includeFile.php');
 	$report_sale = 'rep_target';
 
-	$from_d	    = $_GET['from_d'] ;
-	$catType    = $_GET['catType'] ;
-	$sales_name = $_GET['rep_name'];
-	$to_d       = $_GET['to_d'];  
-	$sales_id   = $_GET['sales_id'];
+	$from_d = isset($_GET['from_d']) ? $_GET['from_d'] : date('Y-m-d');
+	$to_d   = isset($_GET['to_d']) ? $_GET['to_d'] : date('Y-m-d');
+	$sales_id = isset($_GET['sales_id']) ? $_GET['sales_id'] : '';
+	$catType = isset($_GET['catType']) ? $_GET['catType'] : 'Category';
+	$br_id = isset($_GET['com_br']) ? $_GET['com_br'] : '1'; // default branch
 
 
 	$_SESSION['f_day']= $from_d;
@@ -50,6 +52,9 @@
 	}
 	$report_sale    = 'CategoryType';
 	$report_saleRep = 'rep_target';
+	
+	
+
 ?>
 <style>
 	.floatSales{ 
@@ -58,9 +63,9 @@
 
 	}
 	input[type='text'], input[type='number'], select{
-		//height: 28px;
+		
 		padding: 2px 2px 2px 5px;	
-	}q
+	}
 	#list{
 		list-style:none;
 		font-family: 'PT Sans', Verdana, Arial, sans-serif;
@@ -104,7 +109,7 @@
 		
 	}
 	.bilDetUl li{
-		//background:#0066CC;
+		
 		list-style:none;
 		float:left;	
 		margin-left:10px;
@@ -142,7 +147,7 @@
 	  font-size: 12px;
 	  display: block;
 	  width: 100%;
-	 // height: 34px;
+	 
 	  padding: 6px 3px;
 	  font-size: 14px;
 	  line-height: 1.42857143;
@@ -176,9 +181,9 @@
 			?>
 			<div class="right_col" role="main">
 				<h2><i class="glyphicon glyphicon-user"></i> <?php echo $title; ?></h2>
-				<div class="box-content2" style="width:99%; padding-left:1.5%; padding-right::0.5%;">
+				<div class="box-content2" style="width:99%; padding-left:1.5%; padding-right:0.5%;">
 					<div class="row" style="background-color:#D5D3E8;" >
-						<div class="form-group" style="margin-bottom:; margin-left:;width:100%;">
+						<div class="form-group" style="width:100%;">
 							<?php include ('admin_report_bar.php'); ?>
 								</br>
 							<div id="remove_TTb" class="findexcel">
@@ -226,6 +231,7 @@
 																FROM `invitem` WHERE invitem.`Date` BETWEEN '$from_dd' 
 																AND '$to_dd' AND invitem.br_id = '$br_id' ");
 										$ps = 0; $ms = 0;$pc = 0 ;$mc = 0 ;//$GDSwTT= 0;$GDCOSTT =0;$GDBALTT=0;$GDTTPER = 0;
+										
 										while($GDTT = $sql_GDTT->fetch_array()){
 											if($GDTT[2] > 0){
 												$ps += floatval($GDTT[1]);
@@ -404,9 +410,9 @@
 														<td style="text-align:right;">'.number_format($Tsl,2).'</td>
 														<td style="text-align:right;">'.number_format($Tcst,2).'</td>
 														<td style="text-align:right;">'.number_format($balnc,2).'</td>
-														<td style="text-align:right;">'.number_format($ItmPer,2).'%</td>
+														<td style="text-align:right;">'.number_format(floatval($ItmPer),2).'%</td>
 														<td style="text-align:right;">'.number_format($subPer,2).'%</td>
-																												<td style="text-align:right;">'.number_format($percentage,2).'%</td>
+														<td style="text-align:right;">'.number_format(floatval($percentage),2).'%</td>
 											        </tr>';
 													//$GDTTPER += 100*$Tbalnc/$GDBALTT;
 													$sub2Per += $subPer;
@@ -498,7 +504,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="box-content" align="center" >
+				<div class="box-content" style="align-items: center" >
 				    <ul class="ajax-loaders" style="display:none">
 				        <li><img src="../daily/img/ajax-loaders/ajax-loader-8.gif" /></li>                                   
 				    </ul>                
