@@ -564,6 +564,11 @@ if($btn == 'DashTiles'){
             </div>
         </div>
     ';
+
+
+    $htmlTiles['message'] = "Hello, this is a debug message from PHP! Sold Qty: ";
+
+   
     echo json_encode($htmlTiles);
 }
 ?>

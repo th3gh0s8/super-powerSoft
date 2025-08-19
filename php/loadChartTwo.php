@@ -395,6 +395,39 @@ if($btn == 'DashTiles'){
     $htmlTiles['totalCost']   = $sold['costTot'];
     $htmlTiles['message'] = "Hello, this is a debug message from PHP! Sold Qty: ";
 
+
+
+
+    $customerTotals = [];
+    $totalInvTT = 0; // Total for all customers
+
+ 
+
+        //$sqlFindChq = $mysqli->query("SELECT `cusID`, `refNo`, `chqNo`, `ownerType`, `cashDate`, `chqAmount`, `status` ,ID,userID ,entryDate,status,frmID, accountNo
+        //FROM `chq_recieve` WHERE  br_id = '$br_id' ");
+
+$sqlFindChq = $mysqli->query("");
+
+        while ($FindChq = $sqlFindChq->fetch_array()) {
+          $total_nw += $FindChq['chqAmount'];
+        // echo $total_nw;
+        }
+
+        $totalInvTT += $total_nw; // Add to grand total
+        
+    
+
+    // Return the total in JSON
+    $htmlTiles['cusinvTT'] = $totalInvTT; // Or $customerTotals if you want all customers
+   
+
+
+
+
+
+
+
+
     
 
     echo json_encode($htmlTiles);
@@ -403,6 +436,12 @@ if($btn == 'DashTiles'){
     //echo json_encode($profLoss);
     //echo json_encode($sold['QtyTot']);
     
-    //echo "hello";
+    
+
+
+            
 }
+
+
+
 ?>
