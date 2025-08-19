@@ -18,6 +18,8 @@ if ($sql_dob->num_rows > 0) {
     echo '<input type="hidden" name="dateOf" id="dateOf" class="dateOf" value="' . $dob['birth_date'] . '">';
 }
 
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
 
 //echo $_SESSION['u_id'].' xPower4';
 ?>
@@ -3861,13 +3863,7 @@ if ($sql_dob->num_rows > 0) {
                                 $twoMonthsLaterLastDate = new DateTime('last day of +2 month');
                                 $currentDateAfterTwoMonths = $twoMonthsLaterLastDate->format('Y-m-d');
 
-                                $sqlFindChq = $mysqli->query("SELECT `cusID`, `refNo`, `chqNo`, `ownerType`, `cashDate`, `chqAmount`, `status` ,ID,userID ,entryDate,status,frmID, accountNo
-                                FROM `chq_recieve` WHERE  br_id = '$br_id' ");
-
-                                while ($FindChq = $sqlFindChq->fetch_array()) {
-                                  $total_nw += $FindChq['chqAmount'];
-                                // echo $total_nw;
-                                }
+                              
 
                                 echo '
     <div class="row dashBoardM" id="dashBoardM" style="opacity:0;">
@@ -3878,7 +3874,9 @@ if ($sql_dob->num_rows > 0) {
                         <h4 style="float:left;"><a target="_BLANK" href="https://' . $domainNm . '/Home/Reports/Cheque/chq_HandInChq.php?from_d=' . $currentDateThisMonth . '&to_d=' . $currentDateAfterTwoMonths . '" style="color:white;">Cheque In Hand</a> Vs <a target="_BLANK" href="https://' . $domainNm . '/Home/Reports/Cheque/chq_OwnChq.php?from_d=' . $currentDateThisMonth . '&to_d=' . $currentDateAfterTwoMonths . '" style="color:white;">Own Cheques</a> </h4>
                     </div>
                     <div class="col-md-6" style="display: contents;">
-                   <a></a>
+                  
+                    <a href="#" id="chequeResLink"><span id="chequeResValue"></span></a>
+
                     </div>
                     <div class="col-md-6" style="display: contents;">
                         <button class="btn btn-info" id="grab_chq_In_hand" style="float:right;margin-top: 6px;">Load</button>
@@ -4405,40 +4403,75 @@ if ($sql_dob->num_rows > 0) {
 
 
             
-
                 $(document).ready(function() {
-                    $('.loadSalesChart').on('click', function() {
-                      $.ajax({
-                        url: 'ajxNew/loadChartTwo.php',
-                        method: 'POST',
-                        data: { btn: 'DashTiles' }, // Send the button action
-                        dataType: 'json',
-                        beforeSend: function() {
-                          console.log('Loading data...');
-                        },
-                        success: function(data) {
-                          console.log('Data received:', data);
-
-                          // Access soldQty from the response
-                          var soldQty = data.message;
-                          console.log('Sold Quantity:', soldQty);
-
-                          // Updates an element with the soldQty value
-                          $('#profLossValue').text(soldQty);
-
-                          //  Updates the profit/loss span
-                          $('#profLossValue').text(data.message);
-                        },
-                        error: function(xhr, status, error) {
-                          console.error('Error:', error);
-                          alert('Failed to load data. Check the console for details.');
-                        }
-                      });
+                  $('.loadSalesChart').on('click', function() {
+                    $.ajax({
+                      url: 'ajxNew/loadChartTwo.php',
+                      method: 'POST',
+                      data: { btn: 'DashTiles' },
+                      dataType: 'json',
+                      beforeSend: function() {
+                        console.log('Sending request to ajxNew/loadChartTwo.php...');
+                      },
+                      success: function(data) {
+                        console.log('Success! Data:', data);
+                        $('#profLossValue').text(data.cusinvTT);
+                      },
+                      error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                        console.log('Response:', xhr.responseText); // Log the raw response
+                        alert('Failed to load data. Check the console for details.');
+                      }
                     });
                   });
+                });
+
+
+                $(document).ready(function() {
+                  $('#grab_chq_In_hand').on('click', function() {
+                    $.ajax({
+                      url: 'ajxNew/loadChart.php',
+                      method: 'POST',
+                      data: { btn: 'DashTiles' },
+                      dataType: 'json',
+                      beforeSend: function() {
+                        console.log('Sending request to ajxNew/loadChart.php...');
+                      },
+                      success: function(data) {
+                        console.log('Success! Data:', data);
+                        $('#chequeResValue').text(data.message);
+                      },
+                      error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                        console.log('Response:', xhr.responseText); // Log the raw response
+                        alert('Failed to load data. Check the console for details.');
+                      }
+                    });
+                  });
+                });
 
 
 
 
+
+                 
+/*
+                    $(document).ready(function() {
+                        $.ajax({
+                            url: 'your_php_file.php',
+                            method: 'POST',
+                            data: { btn: 'YourButtonValue' },
+                            dataType: 'json',
+                            success: function(data) {
+                                // Display the total in the span
+                                $('#profLossValue').text(data.cusinvTT);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error:", error);
+                            }
+                        });
+                    });
+
+*/
 
             </script>
