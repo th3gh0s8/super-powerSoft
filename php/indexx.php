@@ -840,6 +840,12 @@ if ($sql_dob->num_rows > 0) {
         		background-position: 0% 50%;
         	}
         }
+
+
+ 
+  
+  
+
 </style>
 
 </head>
@@ -3687,6 +3693,9 @@ if ($sql_dob->num_rows > 0) {
   .balance {
     border-left: 5px solid #6f42c1;
   }
+
+
+  
 </style>
 
 <?php
@@ -3875,7 +3884,7 @@ if ($sql_dob->num_rows > 0) {
                     </div>
                     <div class="col-md-6" style="display: contents;">
                   
-                    <a href="#" id="chequeResLink"><span id="chequeResValue"></span></a>
+                    <h4 id="chequeResValue" ></h4>
 
                     </div>
                     <div class="col-md-6" style="display: contents;">
@@ -3918,7 +3927,7 @@ if ($sql_dob->num_rows > 0) {
                         </div>
                         <div class="col-md-6" style="display: contents;">
                           
-                        <a href="#" id="profitLossLink"><span id="profLossValue"></span></a>
+                        <h4 id="profLossValue"></h4>
 
 
                         </div>
@@ -4403,7 +4412,11 @@ if ($sql_dob->num_rows > 0) {
 
 
             
+               
+
+
                 $(document).ready(function() {
+
                   $('.loadSalesChart').on('click', function() {
                     $.ajax({
                       url: 'ajxNew/loadChartTwo.php',
@@ -4415,7 +4428,7 @@ if ($sql_dob->num_rows > 0) {
                       },
                       success: function(data) {
                         console.log('Success! Data:', data);
-                        $('#profLossValue').text(data.cusinvTT);
+                        $('#profLossValue').text(data.balTT);
                       },
                       error: function(xhr, status, error) {
                         console.error('AJAX Error:', status, error);
@@ -4424,10 +4437,7 @@ if ($sql_dob->num_rows > 0) {
                       }
                     });
                   });
-                });
 
-
-                $(document).ready(function() {
                   $('#grab_chq_In_hand').on('click', function() {
                     $.ajax({
                       url: 'ajxNew/loadChart.php',
@@ -4439,7 +4449,7 @@ if ($sql_dob->num_rows > 0) {
                       },
                       success: function(data) {
                         console.log('Success! Data:', data);
-                        $('#chequeResValue').text(data.message);
+                        $('#chequeResValue').text(data.total_nw);
                       },
                       error: function(xhr, status, error) {
                         console.error('AJAX Error:', status, error);
@@ -4448,6 +4458,17 @@ if ($sql_dob->num_rows > 0) {
                       }
                     });
                   });
+
+                  $("#chequeResValue").css("cursor", "pointer"); // make it look clickable
+                  $("#chequeResValue").click(function() {
+                    window.location.href = "Reports/Cheque/chq_HandInChq.php"; // redirect to chq_HandInChq
+                  });
+
+                  $("#profLossValue").css("cursor", "pointer"); // make it look clickable
+                  $("#profLossValue").click(function() {
+                    window.location.href = "Reports/satements/New_CustmrReceivable.php"; // redirect to New_CustmrReceivable
+                  });
+
                 });
 
 
