@@ -398,30 +398,29 @@ if($btn == 'DashTiles'){
 
 
 
-    $customerTotals = [];
-    $totalInvTT = 0; // Total for all customers
+    $sqlTotals = $mysqli->query("
+         SELECT 
+                SUM(InvTot) AS invTT,
+                SUM(InvTot - Balance) AS paidTT,
+                SUM(Balance) AS balTT
+            FROM `invoice`
+            WHERE `Balance` <> 0
+            AND `br_id` = '$br_id'
+           
+        ");
 
- 
 
-        //$sqlFindChq = $mysqli->query("SELECT `cusID`, `refNo`, `chqNo`, `ownerType`, `cashDate`, `chqAmount`, `status` ,ID,userID ,entryDate,status,frmID, accountNo
-        //FROM `chq_recieve` WHERE  br_id = '$br_id' ");
-
-$sqlFindChq = $mysqli->query("");
-
-        while ($FindChq = $sqlFindChq->fetch_array()) {
-          $total_nw += $FindChq['chqAmount'];
-        // echo $total_nw;
+        while ( $totals = $sqlTotals->fetch_array()) {
+            $invTT += $totals['invTT'];
+            $paidTT += $totals['paidTT'];
+            $balTT += $totals['balTT'];
+            
         }
 
-        $totalInvTT += $total_nw; // Add to grand total
         
-    
-
-    // Return the total in JSON
-    $htmlTiles['cusinvTT'] = $totalInvTT; // Or $customerTotals if you want all customers
    
 
-
+        $htmlTiles['balTT'] = "Rs " .number_format($balTT,2);
 
 
 

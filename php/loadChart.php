@@ -566,9 +566,23 @@ if($btn == 'DashTiles'){
     ';
 
 
+    $total_nw = 0; // Explicit initialization
+    $sqlFindChq = $mysqli->query("
+        SELECT cr.`cusID`, cr.`refNo`, cr.`chqNo`, cr.`chqAmount`, cr.`entryDate`, cr.`accountNo`, cr.`frmID`, cr.`userID`, cr.`status`
+        FROM `chq_recieve` cr
+        LEFT JOIN `bank_deposit` bd ON cr.`ID` = bd.`rcvTbID` AND bd.`br_id` = '$br_id'
+        WHERE cr.`br_id` = '$br_id' AND bd.`rcvTbID` IS NULL
+    ");
+    while ($FindChq = $sqlFindChq->fetch_array()) {
+        $total_nw += $FindChq['chqAmount'];
+        
+    }
+
+
     $htmlTiles['message'] = "Hello, this is a debug message from PHP! Sold Qty: ";
 
-   
+    $htmlTiles['total_nw'] = "Rs " .number_format($total_nw,2);
+
     echo json_encode($htmlTiles);
 }
 ?>
