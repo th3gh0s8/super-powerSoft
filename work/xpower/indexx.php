@@ -18,6 +18,8 @@ if ($sql_dob->num_rows > 0) {
     echo '<input type="hidden" name="dateOf" id="dateOf" class="dateOf" value="' . $dob['birth_date'] . '">';
 }
 
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
 
 //echo $_SESSION['u_id'].' xPower4';
 ?>
@@ -838,6 +840,12 @@ if ($sql_dob->num_rows > 0) {
         		background-position: 0% 50%;
         	}
         }
+
+
+ 
+  
+  
+
 </style>
 
 </head>
@@ -3685,6 +3693,9 @@ if ($sql_dob->num_rows > 0) {
   .balance {
     border-left: 5px solid #6f42c1;
   }
+
+
+  
 </style>
 
 <?php
@@ -3861,13 +3872,7 @@ if ($sql_dob->num_rows > 0) {
                                 $twoMonthsLaterLastDate = new DateTime('last day of +2 month');
                                 $currentDateAfterTwoMonths = $twoMonthsLaterLastDate->format('Y-m-d');
 
-                                $sqlFindChq = $mysqli->query("SELECT `cusID`, `refNo`, `chqNo`, `ownerType`, `cashDate`, `chqAmount`, `status` ,ID,userID ,entryDate,status,frmID, accountNo
-                                FROM `chq_recieve` WHERE  br_id = '$br_id' ");
-
-                                while ($FindChq = $sqlFindChq->fetch_array()) {
-                                  $total_nw += $FindChq['chqAmount'];
-                                // echo $total_nw;
-                                }
+                              
 
                                 echo '
     <div class="row dashBoardM" id="dashBoardM" style="opacity:0;">
@@ -3877,20 +3882,30 @@ if ($sql_dob->num_rows > 0) {
                     <div class="col-md-6">
                         <h4 style="float:left;"><a target="_BLANK" href="https://' . $domainNm . '/Home/Reports/Cheque/chq_HandInChq.php?from_d=' . $currentDateThisMonth . '&to_d=' . $currentDateAfterTwoMonths . '" style="color:white;">Cheque In Hand</a> Vs <a target="_BLANK" href="https://' . $domainNm . '/Home/Reports/Cheque/chq_OwnChq.php?from_d=' . $currentDateThisMonth . '&to_d=' . $currentDateAfterTwoMonths . '" style="color:white;">Own Cheques</a> </h4>
                     </div>
+                    
                     <div class="col-md-6" style="display: contents;">
-                   <a>'. $total_nw .'</a>
-                    </div>
-                    <div class="col-md-6" style="display: contents;">
-                        <button class="btn btn-info" id="grab_chq_In_hand" style="float:right;margin-top: 6px;">Load</button>
+                        <button class="btn btn-info" id="grab_chq_In_hand" style="float:right; margin-top: 6px;">Load</button>
                     </div>
                 </div>
         
                 <canvas id="chart_div_chqInHand" height="170px"></canvas>
+
+                 <div class="clearfix"></div>
+
+                 <div class="col-md-6" style="display: contents;">
+                  
+
+                 <lable class="hidden-label" id="chq_In_hand_Label" style="display:none;">Total Cheque In Hand :<lable>
+                  
+                <lable id="chequeResValue" style="float:center;  paddinng-top: 0; padding-bottom: 6px;"></lable>
+
+                </div>
                 
    
             </div>
             <div class="chqInHandAjaxResult">
             </div>
+           
         </div>
     ';
 
@@ -3918,13 +3933,12 @@ if ($sql_dob->num_rows > 0) {
                         <div class="col-md-6">
                             <h4 style="float:left;"><a href="https://' . $domainNm . '/Home/Reports/daily/daily_sales_report_frmt2.php?from_d=' . $janFirstDate . '&to_d=' . $decLastDate . '&sales_id=View%20All&ItemNm=undefined&ItemId=undefined&nametxt=undefined&va=link1&id=undefined&sl_name=View%20All&itemtxt=undefined&print_type=sal_rep&cus_id=View%20All&cat_id=undefined&view_type=undefined&nametxt2=undefined&myBR=1&mon=undefined&sl_year=undefined&user_ids=undefined&type=undefined&cusTb=undefined&location=undefined&cus_area=View%20All&itemtxt=undefined&stockReport=undefined%7CF%7Cundefined%7CF%7Cundefined" style="color:white;" target="_BLANK">Sales</a> Vs <a target="_BLANK" href="https://' . $domainNm . '/Home/Reports/satements/New_CustmrReceivable.php?from_d=' . $janFirstDate . '&to_d=' . $decLastDate . '" style="color:white;">Recievables</a></h4></h4>
                         </div>
+                        
                         <div class="col-md-6" style="display: contents;">
-                                    <!--  <a>a</a> -->
+                        
+                            <button class="btn btn-info loadSalesChart" style="float:right; margin-top: 6px; ">Load</button>
                         </div>
-
-                        <div class="col-md-6" style="display: contents;">
-                            <button class="btn btn-info loadSalesChart" style="float:right;margin-top: 6px;">Load</button>
-                        </div>
+                        
                     </div>
                     
                     <canvas id="chart_div"  height="170px">
@@ -3932,8 +3946,23 @@ if ($sql_dob->num_rows > 0) {
                     </canvas>
                     
                     <div class="clearfix"></div>
+
+                    
+                        <div class="col-md-6" style="display: contents;">
+
+                        
+                       <lable class="hidden-label" id="SalesChartLable" style="display:none;">Total Recievable :<lable>
+                          
+                        <lable id="profLossValue" style="float:center; paddinng-top: 0; padding-bottom: 6px;"></lable>
+
+
+                        </div>
+
                 </div>
-                <div class="ajaxResult"></div>
+                <div class="ajaxResult">
+                
+                
+                </div>
             </div>';
                             
           }
@@ -4399,4 +4428,103 @@ if ($sql_dob->num_rows > 0) {
                     openInNewTab('Reports/satements/New_CustmrReport.php?from_d=' + date1 + '&to_d=' + date2);
 
                 });
+
+
+            
+               
+
+
+                $(document).ready(function() {
+
+                  $('.loadSalesChart').on('click', function() {
+                    $.ajax({
+                      url: 'ajxNew/loadChartTwo.php',
+                      method: 'POST',
+                      data: { btn: 'DashTiles' },
+                      dataType: 'json',
+                      beforeSend: function() {
+                        console.log('Sending request to ajxNew/loadChartTwo.php...');
+                      },
+                      success: function(data) {
+                        console.log('Success! Data:', data);
+                        $('#profLossValue').text(data.balTT);
+                      },
+                      error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                        console.log('Response:', xhr.responseText); // Log the raw response
+                        alert('Failed to load data. Check the console for details.');
+                      }
+                    });
+                  });
+
+                  $('#grab_chq_In_hand').on('click', function() {
+                    $.ajax({
+                      url: 'ajxNew/loadChart.php',
+                      method: 'POST',
+                      data: { btn: 'DashTiles' },
+                      dataType: 'json',
+                      beforeSend: function() {
+                        console.log('Sending request to ajxNew/loadChart.php...');
+                      },
+                      success: function(data) {
+                        console.log('Success! Data:', data);
+                        $('#chequeResValue').text(data.total_nw);
+                      },
+                      error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                        console.log('Response:', xhr.responseText); // Log the raw response
+                        alert('Failed to load data. Check the console for details.');
+                      }
+                    });
+                  });
+
+                  $("#chequeResValue").css("cursor", "pointer"); // make it look clickable
+                  $("#chequeResValue").click(function() {
+                    window.location.href = "Reports/Cheque/chq_HandInChq.php"; // redirect to chq_HandInChq
+                  });
+
+                  $("#profLossValue").css("cursor", "pointer"); // make it look clickable
+                  $("#profLossValue").click(function() {
+                    window.location.href = "Reports/satements/New_CustmrReceivable.php"; // redirect to New_CustmrReceivable
+                  });
+                   
+
+                    $('.loadSalesChart').click(function() {
+                        $('#SalesChartLable').show();
+                    
+                    
+                    })
+
+                    $("#grab_chq_In_hand").click(function(){
+                      $("#chq_In_hand_Label").show(); // makes the label visible
+                    });
+
+                });
+
+
+
+
+
+                 
+/*
+                    $(document).ready(function() {
+                        $.ajax({
+                            url: 'your_php_file.php',
+                            method: 'POST',
+                            data: { btn: 'YourButtonValue' },
+                            dataType: 'json',
+                            success: function(data) {
+                                // Display the total in the span
+                                $('#profLossValue').text(data.cusinvTT);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error:", error);
+                            }
+                        });
+                    });
+
+*/
+
             </script>
+
+<script>

@@ -18,6 +18,8 @@ if ($sql_dob->num_rows > 0) {
     echo '<input type="hidden" name="dateOf" id="dateOf" class="dateOf" value="' . $dob['birth_date'] . '">';
 }
 
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
 
 //echo $_SESSION['u_id'].' xPower4';
 ?>
@@ -838,6 +840,12 @@ if ($sql_dob->num_rows > 0) {
         		background-position: 0% 50%;
         	}
         }
+
+
+ 
+  
+  
+
 </style>
 
 </head>
@@ -870,7 +878,7 @@ if ($sql_dob->num_rows > 0) {
                                 
                             }else{
                                 if($com_id != '006' && $com_id != '501' && $com_id != '508' && $user_type == 'Admin'){
-                                    echo '<a href="https://'.$domainNm.'/Home/feedback" class="feedback-btn" target="_BLANK"></a>';
+                                    echo '<a href="https://go2xpower.com/Home/feedback" class="feedback-btn" target="_BLANK"></a>';
                                 }
                             }
                         ?>
@@ -1001,7 +1009,7 @@ if ($sql_dob->num_rows > 0) {
                                         <p>Online session will be hosted by next week explaining all the details and informations for our registered users.</p>
                                         
                                        
-                                        <a href="https://<?php echo $domainNm; ?>/ReferX" target="_BLANK">Register Now </a>
+                                        <a href="https://go2xpower.com/ReferX" target="_BLANK">Register Now </a>
                                     </div>
                                     
                                     <div id="google_translate_element"></div>
@@ -1522,19 +1530,19 @@ if ($sql_dob->num_rows > 0) {
                                                 <div class="header">
                                                   <h1>Welcome to XPower</h1>
                                                   <p>Your smart accounting journey begins now</p>
-                                                  <a href="https://help.'.$domainNm.'" class="cta-button">Start Tutorial</a>
+                                                  <a href="https://help.go2xpower.com" class="cta-button">Start Tutorial</a>
                                                 </div>
                                             
                                                 <div class="section">
                                                   <h2>Quick Setup</h2>
                                                   <p>Add your business profile, products, and customers in just a few clicks. Get up and running in minutes with XPower’s smart tools.</p>
-                                                  <img src="https://'.$domainNm.'/ajax/email_images/ItemCustomerGif.gif" alt="Quick Setup">
+                                                  <img src="https://go2xpower.com/ajax/email_images/ItemCustomerGif.gif" alt="Quick Setup">
                                                 </div>
                                             
                                                 <div class="section">
                                                   <h2>Send Your First Invoice</h2>
                                                   <p>With our flexible invoice builder, you can generate professional invoices and email them instantly — with your branding and layout preferences.</p>
-                                                  <img src="https://'.$domainNm.'/ajax/email_images/InvoiceGif.gif" alt="Send Your First Invoice">
+                                                  <img src="https://go2xpower.com/ajax/email_images/InvoiceGif.gif" alt="Send Your First Invoice">
                                                 </div>
                                             
                                                 <div class="section">
@@ -1545,13 +1553,13 @@ if ($sql_dob->num_rows > 0) {
                                                 <div class="section highlight">
                                                   <h2>Need help?</h2>
                                                   <p>We’re here for you. <a href="https://wa.me/94722693693">Whatsapp us</a> or click below to visit our Help Center.</p>
-                                                  <a href="https://help.'.$domainNm.'" class="cta-button" style="background-color:#6a0dad;">Go to Help Center</a>
+                                                  <a href="https://help.go2xpower.com" class="cta-button" style="background-color:#6a0dad;">Go to Help Center</a>
                                                 </div>
                                             
                                                 <div class="footer">
                                                   <p>© '.date('Y').' XPower. All rights reserved.</p>
                                                   <p>
-                                                    <a href="https://'.$domainNm.'/Terms_and_conditions.php">Terms</a>
+                                                    <a href="https://go2xpower.com/Terms_and_conditions.php">Terms</a>
                                                   </p>
                                                 </div>
                                             
@@ -1651,13 +1659,13 @@ if ($sql_dob->num_rows > 0) {
                                                 <div class="feature">
                                                   <h2>⚡ Quick Billing (No Mouse Needed)</h2>
                                                   <p>Speed through invoice creation using only your keyboard. Tab through fields, hit Enter to add items, and finish faster than ever.</p>
-                                                  <img src="https://'.$domainNm.'/ajax/email_images/NewInvoice.gif" alt="Quick Billing Demo">
+                                                  <img src="https://go2xpower.com/ajax/email_images/NewInvoice.gif" alt="Quick Billing Demo">
                                                 </div>
                                             
                                                 <div class="feature">
                                                   <h2>📲 SMS Alerts in Real-Time</h2>
                                                   <p>Keep customers informed automatically. XPower sends SMS updates for invoices, payments, dues, and more — instantly.</p>
-                                                  <img src="https://'.$domainNm.'/ajax/email_images/SMSNotification.gif" alt="SMS Notification Demo">
+                                                  <img src="https://go2xpower.com/ajax/email_images/SMSNotification.gif" alt="SMS Notification Demo">
                                                 </div>
                                             
                                                 <div class="feature">
@@ -1676,12 +1684,12 @@ if ($sql_dob->num_rows > 0) {
                                                 </div>
                                             
                                                 <div class="feature" style="text-align: center;">
-                                                  <a href="https://'.$domainNm.'/login.php?u'.$toEmail.'" class="button">Explore xPower Now</a>
+                                                  <a href="https://go2xpower.com/login.php?u'.$toEmail.'" class="button">Explore xPower Now</a>
                                                 </div>
                                             
                                                 <div class="footer">
                                                   <p>© '.date('Y-m-d').' xPower. All rights reserved.</p>
-                                                  <p><a href="https://'.$domainNm.'/Terms_and_conditions.php">Terms</a></p>
+                                                  <p><a href="https://go2xpower.com/Terms_and_conditions.php">Terms</a></p>
                                                 </div>
                                             
                                               </div>
@@ -1798,9 +1806,9 @@ if ($sql_dob->num_rows > 0) {
                                                     <p><strong>Step 2:</strong> Select your customer & items</p>
                                                     <p><strong>Step 3:</strong> Click <strong>Bill</strong> — you’re done!</p>
                                                   </div>
-                                                  <img src="https://'.$domainNm.'/ajax/email_images/NewInvoice.gif" alt="Invoicing Walkthrough" class="image">
+                                                  <img src="https://go2xpower.com/ajax/email_images/NewInvoice.gif" alt="Invoicing Walkthrough" class="image">
                                                   <div style="text-align:center;">
-                                                    <a href="https://'.$domainNm.'/login.php?u'.$toEmail.'=&b=https://'.$domainNm.'/Home/Invoice/invoice.php" class="cta-button">Try Invoicing Now</a>
+                                                    <a href="https://go2xpower.com/login.php?u'.$toEmail.'=&b=https://go2xpower.com/Home/Invoice/invoice.php" class="cta-button">Try Invoicing Now</a>
                                                   </div>
                                                 </div>
                                             
@@ -1812,9 +1820,9 @@ if ($sql_dob->num_rows > 0) {
                                                     <p><strong>Step 2:</strong> Fill in product details like name, unit, price, and stock</p>
                                                     <p><strong>Step 3:</strong> Click <strong>Save</strong></p>
                                                   </div>
-                                                  <img src="https://'.$domainNm.'/ajax/email_images/ItemCustomerGif.gif" alt="Stock Entry" class="image">
+                                                  <img src="https://go2xpower.com/ajax/email_images/ItemCustomerGif.gif" alt="Stock Entry" class="image">
                                                   <div style="text-align:center;">
-                                                    <a href="https://'.$domainNm.'/login.php?u'.$toEmail.'=&b=https://'.$domainNm.'/Home/new/create_item.php" class="cta-button" style="background:#ff8800;">Add First Item</a>
+                                                    <a href="https://go2xpower.com/login.php?u'.$toEmail.'=&b=https://go2xpower.com/Home/new/create_item.php" class="cta-button" style="background:#ff8800;">Add First Item</a>
                                                   </div>
                                                 </div>
                                             
@@ -1827,12 +1835,12 @@ if ($sql_dob->num_rows > 0) {
                                                     <p><strong>Step 3:</strong> Click <strong>Bulk Items Create → Upload</strong></p>
                                                   </div>
                                                   <div style="text-align:center;">
-                                                    <a href="https://'.$domainNm.'/login.php?u'.$toEmail.'=&b=https://'.$domainNm.'/Home/Utility/index.php/Create/ImportRecords" class="cta-button" style="background:#2196f3;">Upload via Excel</a>
+                                                    <a href="https://go2xpower.com/login.php?u'.$toEmail.'=&b=https://go2xpower.com/Home/Utility/index.php/Create/ImportRecords" class="cta-button" style="background:#2196f3;">Upload via Excel</a>
                                                   </div>
                                                 </div>
                                             
                                                 <div class="footer">
-                                                  <p>Need help? <a href="https://help.'.$domainNm.'">Visit Help Center</a> or <a href="https://wa.me/94722693693">Whatsapp us</a></p>
+                                                  <p>Need help? <a href="https://help.go2xpower.com">Visit Help Center</a> or <a href="https://wa.me/94722693693">Whatsapp us</a></p>
                                                   <p>© '.date('Y-m-d').' xPower. All rights reserved.</p>
                                                 </div>
                                             
@@ -1958,7 +1966,7 @@ if ($sql_dob->num_rows > 0) {
                                                 </div>
                                             
                                                 <div class="footer">
-                                                  <p>Still exploring? Visit the <a href="https://help.'.$domainNm.'/help">Help Center</a> or <a href="https://wa.me/94722693693">Whatsapp us</a>.</p>
+                                                  <p>Still exploring? Visit the <a href="https://help.go2xpower.com/help">Help Center</a> or <a href="https://wa.me/94722693693">Whatsapp us</a>.</p>
                                                   <p>© '.date('Y-m-d').' xPower. All rights reserved.</p>
                                                 </div>
                                             
@@ -2108,7 +2116,7 @@ if ($sql_dob->num_rows > 0) {
                                                   </div>
                                             
                                                   <div class="cta">
-                                                    <a href="https://'.$domainNm.'/login.php">Log In to XPower</a>
+                                                    <a href="https://go2xpower.com/login.php">Log In to XPower</a>
                                                   </div>
                                             
                                                   <div class="support-box">
@@ -2121,8 +2129,8 @@ if ($sql_dob->num_rows > 0) {
                                             
                                                 <div class="footer">
                                                   <p>
-                                                    <a href="https://help.'.$domainNm.'">Help Center</a> |
-                                                    <a href="https://'.$domainNm.'/Terms_and_conditions.php">Terms & Conditions</a>
+                                                    <a href="https://help.go2xpower.com">Help Center</a> |
+                                                    <a href="https://go2xpower.com/Terms_and_conditions.php">Terms & Conditions</a>
                                                   </p>
                                                   <p>© '.date('Y-m-d').' xPower. All rights reserved.</p>
                                                 </div>
@@ -2264,14 +2272,14 @@ if ($sql_dob->num_rows > 0) {
                                                   </div>
                                             
                                                   <div class="cta">
-                                                    <a href="https://'.$domainNm.'/login.php?u='.$toEmail.'">Try These in XPower</a>
+                                                    <a href="https://go2xpower.com/login.php?u='.$toEmail.'">Try These in XPower</a>
                                                   </div>
                                                 </div>
                                             
                                                 <div class="footer">
                                                   <p>
-                                                    <a href="https://help.'.$domainNm.'">Help Center</a> |
-                                                    <a href="https://'.$domainNm.'/Terms_and_conditions.php">Terms & Conditions</a>
+                                                    <a href="https://help.go2xpower.com">Help Center</a> |
+                                                    <a href="https://go2xpower.com/Terms_and_conditions.php">Terms & Conditions</a>
                                                   </p>
                                                   <p>Need help? <a href="https://wa.me/94722693693">Chat on WhatsApp</a></p>
                                                   <p>© '.date('Y-m-d').' XPower. All rights reserved.</p>
@@ -2389,7 +2397,7 @@ if ($sql_dob->num_rows > 0) {
                                                   <p>Don’t hesitate to reach out — we’re here to support you every step of the way.</p>
                                             
                                                   <div class="cta" style="text-align: center;">
-                                                    <a href="https://help.'.$domainNm.'" class="cta-button">Visit Help Center</a>
+                                                    <a href="https://help.go2xpower.com" class="cta-button">Visit Help Center</a>
                                                   </div>
                                             
                                                   <div class="support">
@@ -2401,8 +2409,8 @@ if ($sql_dob->num_rows > 0) {
                                             
                                                 <div class="footer">
                                                   <p>
-                                                    <a href="https://help.'.$domainNm.'">Help Center</a> |
-                                                    <a href="https://'.$domainNm.'/Terms_and_conditions.php">Terms & Conditions</a>
+                                                    <a href="https://help.go2xpower.com">Help Center</a> |
+                                                    <a href="https://go2xpower.com/Terms_and_conditions.php">Terms & Conditions</a>
                                                   </p>
                                                   <p>© '.date('Y-m-d').' xPower. All rights reserved.</p>
                                                 </div>
@@ -2548,14 +2556,14 @@ if ($sql_dob->num_rows > 0) {
                                                   </div>
                                             
                                                   <div class="cta">
-                                                    <a href="https://'.$domainNm.'/login.php?u='.$toEmail.'">Start Your Success Story</a>
+                                                    <a href="https://go2xpower.com/login.php?u='.$toEmail.'">Start Your Success Story</a>
                                                   </div>
                                                 </div>
                                             
                                                 <div class="footer">
                                                   <p>
-                                                    <a href="https://help.'.$domainNm.'">Help Center</a> |
-                                                    <a href="https://'.$domainNm.'/Terms_and_conditions.php">Terms & Conditions</a>
+                                                    <a href="https://help.go2xpower.com">Help Center</a> |
+                                                    <a href="https://go2xpower.com/Terms_and_conditions.php">Terms & Conditions</a>
                                                   </p>
                                                   <p>Need support? <a href="https://wa.me/94722693693">WhatsApp Us</a></p>
                                                   <p>© '.date('Y-m-d').' XPower. All rights reserved.</p>
@@ -2698,14 +2706,14 @@ if ($sql_dob->num_rows > 0) {
                                                   </div>
                                             
                                                   <div class="cta">
-                                                    <a href="https://'.$domainNm.'/login.php?u='.$toEmail.'">Manage My Inventory</a>
+                                                    <a href="https://go2xpower.com/login.php?u='.$toEmail.'">Manage My Inventory</a>
                                                   </div>
                                                 </div>
                                             
                                                 <div class="footer">
                                                   <p>
-                                                    <a href="https://help.'.$domainNm.'">Help Center</a> |
-                                                    <a href="https://'.$domainNm.'/Terms_and_conditions.php">Terms & Conditions</a>
+                                                    <a href="https://help.go2xpower.com">Help Center</a> |
+                                                    <a href="https://go2xpower.com/Terms_and_conditions.php">Terms & Conditions</a>
                                                   </p>
                                                   <p>Need help? <a href="https://wa.me/94722693693">WhatsApp Us</a></p>
                                                   <p>© '.date('Y-m-d').' XPower. All rights reserved.</p>
@@ -2902,14 +2910,14 @@ if ($sql_dob->num_rows > 0) {
                                                   <p>When you choose XPower, you’re not just getting accounting — you\'re unlocking a system that works like a business assistant.</p>
                                             
                                                   <div class="cta">
-                                                    <a href="https://'.$domainNm.'/login.php?u='.$toEmail.'">Continue with xPower</a>
+                                                    <a href="https://go2xpower.com/login.php?u='.$toEmail.'">Continue with xPower</a>
                                                   </div>
                                                 </div>
                                             
                                                 <div class="footer">
                                                   <p>
-                                                    <a href="https://help.'.$domainNm.'">Help Center</a> |
-                                                    <a href="https://'.$domainNm.'/Terms_and_conditions.php">Terms & Conditions</a>
+                                                    <a href="https://help.go2xpower.com">Help Center</a> |
+                                                    <a href="https://go2xpower.com/Terms_and_conditions.php">Terms & Conditions</a>
                                                   </p>
                                                   <p>Need help? <a href="https://wa.me/94722693693">WhatsApp Us</a></p>
                                                   <p>© '.date('Y-m-d').' XPower. All rights reserved.</p>
@@ -3054,14 +3062,14 @@ if ($sql_dob->num_rows > 0) {
                                                   </div>
                                             
                                                   <div class="cta">
-                                                    <a href="https://'.$domainNm.'/login.php?u='.$toEmail.'">Upgrade My Account</a>
+                                                    <a href="https://go2xpower.com/login.php?u='.$toEmail.'">Upgrade My Account</a>
                                                   </div>
                                                 </div>
                                             
                                                 <div class="footer">
                                                   <p>
-                                                    <a href="https://help.'.$domainNm.'">Help Center</a> |
-                                                    <a href="https://'.$domainNm.'/Terms_and_conditions.php">Terms & Conditions</a>
+                                                    <a href="https://help.go2xpower.com">Help Center</a> |
+                                                    <a href="https://go2xpower.com/Terms_and_conditions.php">Terms & Conditions</a>
                                                   </p>
                                                   <p>Need help? <a href="https://wa.me/94722693693">WhatsApp Us</a></p>
                                                   <p>Â© '.date('Y-m-d').' xPower. All rights reserved.</p>
@@ -3186,7 +3194,7 @@ if ($sql_dob->num_rows > 0) {
                                                   <p style="margin-bottom: 30px;">Or book a free 15-minute Zoom call to guide you through your setup.</p>
                                             
                                                   <div class="cta">
-                                                    <a href="https://'.$domainNm.'/login.php?u='.$toEmail.'">Upgrade & Save 10%</a>
+                                                    <a href="https://go2xpower.com/login.php?u='.$toEmail.'">Upgrade & Save 10%</a>
                                                   </div>
                                             
                                                   <p style="text-align: center; margin-top: 20px;">
@@ -3196,8 +3204,8 @@ if ($sql_dob->num_rows > 0) {
                                             
                                                 <div class="footer">
                                                   <p>
-                                                    <a href="https://help.'.$domainNm.'">Help Center</a> |
-                                                    <a href="https://'.$domainNm.'/Terms_and_conditions.php">Terms & Conditions</a>
+                                                    <a href="https://help.go2xpower.com">Help Center</a> |
+                                                    <a href="https://go2xpower.com/Terms_and_conditions.php">Terms & Conditions</a>
                                                   </p>
                                                   <p>© '.date('Y-m-d').' xPower. All rights reserved.</p>
                                                 </div>
@@ -3342,7 +3350,7 @@ if ($sql_dob->num_rows > 0) {
                                                   </div>
                                             
                                                   <div class="cta">
-                                                    <a href="https://'.$domainNm.'/login.php?u='.$toEmail.'">Upgrade My Account</a>
+                                                    <a href="https://go2xpower.com/login.php?u='.$toEmail.'">Upgrade My Account</a>
                                                   </div>
                                             
                                                   <p style="text-align:center; margin-top: 20px;">
@@ -3352,8 +3360,8 @@ if ($sql_dob->num_rows > 0) {
                                             
                                                 <div class="footer">
                                                   <p>
-                                                    <a href="https://help.'.$domainNm.'">Help Center</a> |
-                                                    <a href="https://'.$domainNm.'/Terms_and_conditions.php">Terms & Conditions</a>
+                                                    <a href="https://help.go2xpower.com">Help Center</a> |
+                                                    <a href="https://go2xpower.com/Terms_and_conditions.php">Terms & Conditions</a>
                                                   </p>
                                                   <p>© '.date('Y-m-d').' xPower. All rights reserved.</p>
                                                 </div>
@@ -3366,7 +3374,7 @@ if ($sql_dob->num_rows > 0) {
                                         $mail_subject = "Today’s the Day – Keep xPower Access + Get a Bonus";
                                     }
                                     
-                                    $fromEmail = "noreply@'.$domainNm.'";
+                                    $fromEmail = "noreply@go2xpower.com";
                                 	$headers = "From: xPower Family <" . $fromEmail . ">\r\n" .
                                 		"Reply-To: " . $fromEmail . "\r\n" .
                                 		"X-Mailer: PHP/" . phpversion();
@@ -3685,6 +3693,9 @@ if ($sql_dob->num_rows > 0) {
   .balance {
     border-left: 5px solid #6f42c1;
   }
+
+
+  
 </style>
 
 <?php
@@ -3861,16 +3872,23 @@ if ($sql_dob->num_rows > 0) {
                                 $twoMonthsLaterLastDate = new DateTime('last day of +2 month');
                                 $currentDateAfterTwoMonths = $twoMonthsLaterLastDate->format('Y-m-d');
 
+                              
+
                                 echo '
     <div class="row dashBoardM" id="dashBoardM" style="opacity:0;">
         <div class="col-md-6 col-sm-6 col-xs-12" style="margin-bottom: 15px;">
             <div class="dashboard_graph" style="padding-top:0">
                 <div class="row x_title row">
                     <div class="col-md-6">
-                        <h4 style="float:left;"><a target="_BLANK" href="https://' . $domainNm . '/Home/Reports/Cheque/chq_HandInChq.php?from_d=' . $currentDateThisMonth . '&to_d=' . $currentDateAfterTwoMonths . '" style="color:white;">Cheque In Hand</a> Vs <a target="_BLANK" href="https://' . $domainNm . '/Home/Reports/Cheque/chq_OwnChq.php?from_d=' . $currentDateThisMonth . '&to_d=' . $currentDateAfterTwoMonths . '" style="color:white;">Own Cheques</a></h4>
+                        <h4 style="float:left;"><a target="_BLANK" href="https://' . $domainNm . '/Home/Reports/Cheque/chq_HandInChq.php?from_d=' . $currentDateThisMonth . '&to_d=' . $currentDateAfterTwoMonths . '" style="color:white;">Cheque In Hand</a> Vs <a target="_BLANK" href="https://' . $domainNm . '/Home/Reports/Cheque/chq_OwnChq.php?from_d=' . $currentDateThisMonth . '&to_d=' . $currentDateAfterTwoMonths . '" style="color:white;">Own Cheques</a> </h4>
                     </div>
                     <div class="col-md-6" style="display: contents;">
-                        <button class="btn btn-info" id="grab_chq_In_hand" style="float:right;margin-top: 6px;">Load</button>
+                  
+                    <div id="chequeResValue"></div>
+
+                    </div>
+                    <div class="col-md-6" style="display: contents;">
+                        <button class="btn btn-info" id="grab_chq_In_hand" style="float:right; margin-top: 0px; margin-bottom: 20px;">Load</button>
                     </div>
                 </div>
         
@@ -3893,6 +3911,10 @@ if ($sql_dob->num_rows > 0) {
                                 // December 31st of the current year
                                 $decLast = new DateTime("$currentYear-12-31");
                                 $decLastDate = $decLast->format('Y-m-d');
+
+                               
+
+
                                 echo '
                 <div class="col-md-6 col-sm-6 col-xs-12" style="margin-bottom: 15px;">
                     <div class="col-md-5 col-sm-5 col-xs-12" style="display:none;">
@@ -3904,8 +3926,16 @@ if ($sql_dob->num_rows > 0) {
                             <h4 style="float:left;"><a href="https://' . $domainNm . '/Home/Reports/daily/daily_sales_report_frmt2.php?from_d=' . $janFirstDate . '&to_d=' . $decLastDate . '&sales_id=View%20All&ItemNm=undefined&ItemId=undefined&nametxt=undefined&va=link1&id=undefined&sl_name=View%20All&itemtxt=undefined&print_type=sal_rep&cus_id=View%20All&cat_id=undefined&view_type=undefined&nametxt2=undefined&myBR=1&mon=undefined&sl_year=undefined&user_ids=undefined&type=undefined&cusTb=undefined&location=undefined&cus_area=View%20All&itemtxt=undefined&stockReport=undefined%7CF%7Cundefined%7CF%7Cundefined" style="color:white;" target="_BLANK">Sales</a> Vs <a target="_BLANK" href="https://' . $domainNm . '/Home/Reports/satements/New_CustmrReceivable.php?from_d=' . $janFirstDate . '&to_d=' . $decLastDate . '" style="color:white;">Recievables</a></h4></h4>
                         </div>
                         <div class="col-md-6" style="display: contents;">
-                            <button class="btn btn-info loadSalesChart" style="float:right;margin-top: 6px;">Load</button>
+                          
+                        <div id="profLossValue"></div>
+
+
                         </div>
+                        
+                        <div class="col-md-6" style="display: contents;">
+                            <button class="btn btn-info loadSalesChart" style="float:right; margin-top: 0px; margin-bottom: 20px;">Load</button>
+                        </div>
+                        
                     </div>
                     
                     <canvas id="chart_div"  height="170px">
@@ -3916,7 +3946,8 @@ if ($sql_dob->num_rows > 0) {
                 </div>
                 <div class="ajaxResult"></div>
             </div>';
-                            }
+                            
+          }
 
                             echo '</div>';
                             ?>
@@ -4379,4 +4410,90 @@ if ($sql_dob->num_rows > 0) {
                     openInNewTab('Reports/satements/New_CustmrReport.php?from_d=' + date1 + '&to_d=' + date2);
 
                 });
+
+
+            
+               
+
+
+                $(document).ready(function() {
+
+                  $('.loadSalesChart').on('click', function() {
+                    $.ajax({
+                      url: 'ajxNew/loadChartTwo.php',
+                      method: 'POST',
+                      data: { btn: 'DashTiles' },
+                      dataType: 'json',
+                      beforeSend: function() {
+                        console.log('Sending request to ajxNew/loadChartTwo.php...');
+                      },
+                      success: function(data) {
+                        console.log('Success! Data:', data);
+                        $('#profLossValue').text(data.balTT);
+                      },
+                      error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                        console.log('Response:', xhr.responseText); // Log the raw response
+                        alert('Failed to load data. Check the console for details.');
+                      }
+                    });
+                  });
+
+                  $('#grab_chq_In_hand').on('click', function() {
+                    $.ajax({
+                      url: 'ajxNew/loadChart.php',
+                      method: 'POST',
+                      data: { btn: 'DashTiles' },
+                      dataType: 'json',
+                      beforeSend: function() {
+                        console.log('Sending request to ajxNew/loadChart.php...');
+                      },
+                      success: function(data) {
+                        console.log('Success! Data:', data);
+                        $('#chequeResValue').text(data.total_nw);
+                      },
+                      error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                        console.log('Response:', xhr.responseText); // Log the raw response
+                        alert('Failed to load data. Check the console for details.');
+                      }
+                    });
+                  });
+
+                  $("#chequeResValue").css("cursor", "pointer"); // make it look clickable
+                  $("#chequeResValue").click(function() {
+                    window.location.href = "Reports/Cheque/chq_HandInChq.php"; // redirect to chq_HandInChq
+                  });
+
+                  $("#profLossValue").css("cursor", "pointer"); // make it look clickable
+                  $("#profLossValue").click(function() {
+                    window.location.href = "Reports/satements/New_CustmrReceivable.php"; // redirect to New_CustmrReceivable
+                  });
+
+                });
+
+
+
+
+
+                 
+/*
+                    $(document).ready(function() {
+                        $.ajax({
+                            url: 'your_php_file.php',
+                            method: 'POST',
+                            data: { btn: 'YourButtonValue' },
+                            dataType: 'json',
+                            success: function(data) {
+                                // Display the total in the span
+                                $('#profLossValue').text(data.cusinvTT);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error:", error);
+                            }
+                        });
+                    });
+
+*/
+
             </script>

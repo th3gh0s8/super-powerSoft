@@ -3884,11 +3884,11 @@ if ($sql_dob->num_rows > 0) {
                     </div>
                     <div class="col-md-6" style="display: contents;">
                   
-                    <h4 id="chequeResValue" ></h4>
+                    <div id="chequeResValue"></div>
 
                     </div>
                     <div class="col-md-6" style="display: contents;">
-                        <button class="btn btn-info" id="grab_chq_In_hand" style="float:right;margin-top: 6px;">Load</button>
+                        <button class="btn btn-info" id="grab_chq_In_hand" style="float:right; margin-top: 0px; margin-bottom: 20px;">Load</button>
                     </div>
                 </div>
         
@@ -3927,14 +3927,15 @@ if ($sql_dob->num_rows > 0) {
                         </div>
                         <div class="col-md-6" style="display: contents;">
                           
-                        <h4 id="profLossValue"></h4>
+                        <div id="profLossValue"></div>
 
 
                         </div>
-
+                        
                         <div class="col-md-6" style="display: contents;">
-                            <button class="btn btn-info loadSalesChart" style="float:right;margin-top: 6px;">Load</button>
+                            <button class="btn btn-info loadSalesChart" style="float:right; margin-top: 0px; margin-bottom: 20px;">Load</button>
                         </div>
+                        
                     </div>
                     
                     <canvas id="chart_div"  height="170px">
