@@ -180,11 +180,12 @@ while($res = $sql_receive->fetch_array()){
         $sql_user2=" AND cusstatement.user_id='".$user_ids."'";
     }
     
-    // FIX: Modified cheque query to properly retrieve purchNo
+    // FIX: Modified all queries to properly retrieve customer and rep information
     if($res['1'] == 'Cheque'){
         $qry = "SELECT cusstatement.`Date`,cusstatement.`InvNo`, `ReceiptNo`, cusstatement.`Name`,
                 cusstatement.`Paid`, cusstatement.`NowTime`,  cusstatement.`RepID`, `FromDue`,
-                user_id,chq_recieve.cashDate,chq_recieve.chqNo, invID, DueNote as Location, invoice.purchNo
+                user_id,chq_recieve.cashDate,chq_recieve.chqNo, invID, DueNote as Location, 
+                cusstatement.cusTbID, invoice.repTbID as rt, invoice.purchNo
                 FROM cusstatement 
                 JOIN `chq_recieve` ON ReceiptNo=refNo 
                 JOIN invoice ON cusstatement.`invID`=invoice.ID 
@@ -197,14 +198,16 @@ while($res = $sql_receive->fetch_array()){
     elseif($res['1'] == 'Card' ){
         $qry = "SELECT cusstatement.`Date`,cusstatement.`InvNo`, `ReceiptNo`, cusstatement.`Name`,
                 cusstatement.`Paid`, cusstatement.`NowTime`,  cusstatement.`RepID`, `FromDue`,
-                user_id,invoice.Date AS dd , invoice.`RepID` as rr, cusstatement.cusTbID, invID, invoice.Location, invoice.repTbID as rt, invoice.purchNo
+                user_id,invoice.Date AS dd , invoice.`RepID` as rr, cusstatement.cusTbID, invID, 
+                invoice.Location, invoice.repTbID as rt, invoice.purchNo
                 FROM  cusstatement JOIN invoice ON cusstatement.`invID`=invoice.ID  
                 WHERE ReceiptNo= '$res[0]' AND cusstatement.br_id = '$br_id' $sql_user2";
     }
     else {
         $qry = "SELECT cusstatement.`Date`,cusstatement.`InvNo`, `ReceiptNo`, cusstatement.`Name`,
                 cusstatement.`Paid`, cusstatement.`NowTime`,  cusstatement.`RepID`, `FromDue`,
-                user_id,invoice.Date AS dd , invoice.`RepID` as rr, cusstatement.cusTbID, invID, invoice.Location, invoice.repTbID as rt, invoice.purchNo
+                user_id,invoice.Date AS dd , invoice.`RepID` as rr, cusstatement.cusTbID, invID, 
+                invoice.Location, invoice.repTbID as rt, invoice.purchNo
                 FROM cusstatement JOIN invoice ON cusstatement.`invID`=invoice.ID  
                 WHERE ReceiptNo= '$res[0]' AND cusstatement.br_id = '$br_id' $sql_user2 ";
     }
@@ -216,8 +219,23 @@ while($res = $sql_receive->fetch_array()){
     $diff = 0;
     
     while($res_receive_nw = $get_rst->fetch_array()){
-        $sql_custName = $mysqli->query("SELECT cusName, CustomerID FROM custtable WHERE ID = '$res_receive_nw[cusTbID]'");
-        $cusName = $sql_custName->fetch_array();
+        // FIX: Ensure customer information is retrieved for all payment types
+        $customerId = isset($res_receive_nw['cusTbID']) ? $res_receive_nw['cusTbID'] : '';
+        
+        if ($customerId) {
+            $sql_custName = $mysqli->query("SELECT cusName, CustomerID FROM custtable WHERE ID = '$customerId'");
+            if ($sql_custName && $sql_custName->num_rows > 0) {
+                $cusName = $sql_custName->fetch_array();
+                $customerName = $cusName[0];
+                $customerID = $cusName[1];
+            } else {
+                $customerName = 'N/A';
+                $customerID = 'N/A';
+            }
+        } else {
+            $customerName = 'N/A';
+            $customerID = 'N/A';
+        }
         
         $invoiceDate =   $res_receive_nw['dd'];
         $paymentDate =   $res_receive_nw['Date'];
@@ -226,6 +244,15 @@ while($res = $sql_receive->fetch_array()){
         
         $chq = '';$AgeDate='';$chqTot = isset($res_receive_nw[11]) ? $res_receive_nw[11] : 0; 
         $chqTot2 = '';$chqPaid = '';
+        
+        // FIX: Ensure rep name is retrieved for all payment types
+        $repId = isset($res_receive_nw['rt']) ? $res_receive_nw['rt'] : '';
+        if ($repId) {
+            $repInfo = FindRepName("ID", $repId, $br_idd);
+            $repNm = isset($repInfo['Name']) ? $repInfo['Name'] : 'N/A';
+        } else {
+            $repNm = 'N/A';
+        }
         
         if($res['1'] == 'Cheque' ){
             $today =   strtotime($res['i_date']);
@@ -270,8 +297,6 @@ while($res = $sql_receive->fetch_array()){
                 $ageD .= $diffFin.'<br/>';
             }
             
-            $repNm = FindRepName("ID", $res_receive_nw['rt'], $br_idd)['Name'];
-            
             // FIX: Use the purchNo from the query result for cheque payments
             $purchNoDisplay = isset($res_receive_nw['purchNo']) ? $res_receive_nw['purchNo'] : '';
         }
@@ -279,7 +304,6 @@ while($res = $sql_receive->fetch_array()){
             $CARD_NW = $res_receive_nw['Paid'];
             $invD = $res_receive_nw[9];
             $inv = '<a style="cursor:pointer; color:blue;" class="click_invDetail" value="'.$res_receive_nw[1].'">'.$res_receive_nw[1].'</a>';
-            $repNm = FindRepName("ID", $res_receive_nw['rt'], $br_idd)['Name'];
             $purchNoDisplay = $res_receive_nw['purchNo'];
         }
         else {
@@ -294,7 +318,6 @@ while($res = $sql_receive->fetch_array()){
             }
             $invD = $res_receive_nw[9];
             $inv = '<a style="cursor:pointer; color:blue;" class="click_invDetail" value="'.$res_receive_nw[1].'">'.$res_receive_nw[1].'</a>';
-            $repNm = FindRepName("ID", $res_receive_nw['rt'], $br_idd)['Name'];
             $purchNoDisplay = $res_receive_nw['purchNo'];
         }
         
@@ -322,8 +345,8 @@ while($res = $sql_receive->fetch_array()){
             <td>'.$inv.'</td>
             <td><a class="reciptNo" style="color:blue; cursor:pointer;" recValue="'.$res_receive_nw[2].'">'.$res_receive_nw[2].'</a></td>
             <td>'.$res_receive_nw['Location'].' | Due '.$res['DueNote'].' '.$purchNoDisplay.'</td>
-            <td>'.$cusName[1].'</td>
-            <td>'.$cusName[0].'</td>
+            <td>'.$customerID.'</td>
+            <td>'.$customerName.'</td>
             <td style="text-align:right;">'.number_format($CASH_NW,2).'</td>
             <td style="text-align:right;">'.number_format($BANK_NW,2).'</td>
             <td style="text-align:right;">'.$chqPaid.'</td>';
@@ -355,6 +378,7 @@ while($res = $sql_receive->fetch_array()){
     }
 }
 
+
 echo'  </tbody>';
 			
 			
@@ -385,7 +409,7 @@ echo'<tfoot>
 	</tr >	
 		
 </tfoot>';
-//}
+
 ?> 
     </table>
     </div>
