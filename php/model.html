@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal Form Autofill</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #4a6fc0;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .form-container {
+            padding: 25px;
+        }
+        
+        .main-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .full-width {
+            grid-column: 1 / span 2;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: #4a6fc0;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(74, 111, 192, 0.2);
+        }
+        
+        .open-modal-btn {
+            background: #4a6fc0;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+        
+        .open-modal-btn:hover {
+            background: #3a5ca9;
+        }
+        
+        .submit-btn {
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background: #27ae60;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: modalFade 0.3s;
+        }
+        
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            background: #4a6fc0;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .modal-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .modal-submit-btn {
+            background: #4a6fc0;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        .modal-submit-btn:hover {
+            background: #3a5ca9;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .main-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .full-width {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Registration Form</h1>
+            <p class="description">Click the button below to open a modal form and auto-fill this form</p>
+        </header>
+        
+        <div class="form-container">
+            <form id="mainForm" class="main-form">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+                </div>
+                
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" name="company" placeholder="Enter your company name">
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" placeholder="Enter your full address">
+                </div>
+                
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" placeholder="Enter your city">
+                </div>
+                
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select id="country" name="country">
+                        <option value="">Select a country</option>
+                        <option value="usa">United States</option>
+                        <option value="uk">United Kingdom</option>
+                        <option value="canada">Canada</option>
+                        <option value="australia">Australia</option>
+                        <option value="germany">Germany</option>
+                    </select>
+                </div>
+                
+                <div class="form-group full-width">
+                    <button type="button" id="openModal" class="open-modal-btn">
+                        <i class="fas fa-external-link-alt"></i> Open Modal Form
+                    </button>
+                </div>
+                
+                <div class="form-group full-width">
+                    <button type="submit" class="submit-btn">Submit Registration</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Form -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Quick Fill Form</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="modalForm" class="modal-form">
+                    <div class="form-group">
+                        <label for="modalName">Full Name</label>
+                        <input type="text" id="modalName" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modalEmail">Email Address</label>
+                        <input type="email" id="modalEmail" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modalPhone">Phone Number</label>
+                        <input type="tel" id="modalPhone" placeholder="Enter your phone number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modalCompany">Company</label>
+                        <input type="text" id="modalCompany" placeholder="Enter your company name">
+                    </div>
+                    
+                    <button type="submit" class="modal-submit-btn">Autofill Main Form</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get modal and buttons
+        const modal = document.getElementById('modal');
+        const openModalBtn = document.getElementById('openModal');
+        const closeModalBtn = document.querySelector('.close-btn');
+        const mainForm = document.getElementById('mainForm');
+        const modalForm = document.getElementById('modalForm');
+        
+        // Open modal
+        openModalBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+        
+        // Close modal
+        closeModalBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // Handle modal form submission
+        modalForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get values from modal form
+            const name = document.getElementById('modalName').value;
+            const email = document.getElementById('modalEmail').value;
+            const phone = document.getElementById('modalPhone').value;
+            const company = document.getElementById('modalCompany').value;
+            
+            // Autofill main form
+            document.getElementById('fullName').value = name;
+            document.getElementById('email').value = email;
+            document.getElementById('phone').value = phone;
+            document.getElementById('company').value = company;
+            
+            // Close the modal
+            modal.style.display = 'none';
+            
+            // Show success message
+            alert('Main form has been auto-filled with your information!');
+        });
+        
+        // Handle main form submission
+        mainForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Form submitted successfully!');
+            // In a real application, you would handle form submission to a server here
+        });
+    </script>
+</body>
+</html>
