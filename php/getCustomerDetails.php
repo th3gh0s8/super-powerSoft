@@ -1,14 +1,12 @@
 <?php
-include('../path.php');
-include('../connection.php');
-
-header('Content-Type: application/json');
+include('path.php');
+include($path . 'connection.php');
 
 if (isset($_POST['customerID'])) {
     $customerID = $_POST['customerID'];
     
-    // Query to get customer details including address
-    $query = $mysqli->query("SELECT CustomerID, cusName, Address, TelNo, MobNo 
+    // Query to get customer details
+    $query = $mysqli->query("SELECT ID, CustomerID, cusName, Address, TelNo, MobNo 
                             FROM custtable 
                             WHERE CustomerID = '$customerID'");
     
@@ -17,7 +15,7 @@ if (isset($_POST['customerID'])) {
         
         echo json_encode([
             'status' => 'success',
-            'CustomerID' => $customer['CustomerID'],
+            'ID' => $customer['ID'],
             'cusName' => $customer['cusName'],
             'Address' => $customer['Address'],
             'TelNo' => $customer['TelNo'],

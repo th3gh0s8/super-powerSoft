@@ -143,7 +143,7 @@
                             <label for="inputEmail4" style="margin-bottom: 0px;">Customer Name</label><label style="color: red;">*</label>
                             <input type="text" name="Cusname" id="Cusname" class="form-control" placeholder="Customer name" />
                             <div style="z-index: 1000; position: absolute; background-color: #c9c9c9; width: 94%;" id="customerList"></div>
-                            <input type="hidden" class="customerTbID" name="customerID" value="" readonly />
+                            <input type="hidden" id="customerID" class="customerID" name="customerID" value="" readonly />
                           </div>
                           <div class="form-group col-md-1 col-sm-1 col-xs-1" style="margin-bottom: 15px;">
                             <label for="inputEmail4" style="margin-bottom: 0px;">&nbsp;</label>
@@ -820,7 +820,7 @@
 
 
               $('#cusName').html(data.cusDet.cusName);
-              $('.customerTbID').val(data.cusDet.ID)
+              $('.customerID').val(data.cusDet.ID)
               $('#cusMob').html(data.cusDet.TelNo);
               $('#cusAddr').html(data.cusDet.Address);
 
@@ -874,7 +874,7 @@
             $('#depositAmt').val(data.imeiDet.depositAmount)
             $('#caseId').val(data.imeiDet.ID)
             $('#warrantytypeDet').val(data.imeiDet.warrantyType)
-            $('.customerTbID').val(data.imeiDet.cusTb)
+            $('.customerID').val(data.imeiDet.cusTb)
 
             $('.Itemmsname').val(data.imeiDet.itmName);
             $('.itemmsID').val(data.imeiDet.ItemID);
@@ -913,7 +913,7 @@
 
       $(document).on('click', '.cutomnme', function(e) {
         e.preventDefault()
-        $('.customerTbID').val($(this).attr('rvt'))
+        $('.customerID').val($(this).attr('rvt'))
         $('#Cusname').val($(this).text());
         $('#customerList').fadeOut();
         $('#address').val($(this).attr('cusAddressFixed'));
@@ -1173,44 +1173,6 @@
 
       });
     </script>
-
-<script>
-$(document).ready(function() {
-    // Handle click on "Create new customer" button
-    $('#cusCreate').click(function() {
-        $('#Customer_Create').modal('show');
-    });
-
-
-});
-</script>
-
-
-<script>
-// QR_CUSTOMER function to fetch customer data and populate the form
-function QR_CUSTOMER(CusID) {
-    
-    $.ajax({
-        url: 'ajx/getCustomerDetails.php', // You'll need to create this endpoint
-        type: 'POST',
-        data: { customerID: CusID },
-        dataType: 'json',
-        success: function(data) {
-            if (data.status === 'success') {
-                $('#Cusname').val(data.cusName);
-                $('#mobileNo').val(data.TelNo || data.MobNo);
-                $('#address').val(data.Address);
-                $('.customerTbID').val(data.ID);
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching customer data:', error);
-            alert('Error fetching customer data. Please try again.');
-        }
-    });
-}
-</script>
-
 
     <?php
     include($path . 'footer.php');
