@@ -129,7 +129,7 @@ if (isset($_GET['duplct'])) {
 
 			@page {
 				size: auto;
-				margin-top: 80px;
+				margin-top: 100px;
 				margin-bottom: 5mm;
 			}
 
@@ -402,10 +402,10 @@ if ($inv['settlment_date'] != '0000-00-00' && $inv['settlment_date'] != '1970-01
 			$itmDescription = $itm['Description'] . $warnty . $itemType;
 
 			echo '<tr ' . $lineBold . '>
-				<td  style="width:10px">' . $lin_No . ' </td>
-                <td  style="width:50px">' . $itm['ItemNo'] . '</td>
+				<td  style="width:5px" align="right" >' . $lin_No . ' </td>
+                <td  style="width:50px" >' . $itm['ItemNo'] . '</td>
                 <td  style="width:300px"colspan="2" align="left" >  ' . substr($itmDescription, 0, 50) . '</td>
-                <td  style="width:30px"align="right">' . $qty . '</td>
+                <td  style="width:30px"align="center">' . $qty . '</td>
                 <!--<td  style="width:30px"align="right">' . $itm['Unit'] . '</td>-->
                 <td  style="width:70px"align="right">' . numFormt2($fixedPrice) . '</td>
 				<td  style="width:70px"align="right">' . numFormt2($finTot) . '</td>
