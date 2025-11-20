@@ -162,7 +162,10 @@ if ($com_id == 320) {
 
      echo '	                                                 
     <table border="0" style="width:100%" class="compnTb">
-        <tr>';
+    <tr>
+			<td colspan="2"><div align="center">' . $duplct . '</div></td>                
+        </tr>
+        ';
         
         if($res_com['brImg'] != ''){
             echo '
@@ -174,11 +177,6 @@ if ($com_id == 320) {
 
 
     echo '	                                                 
-    <table border="0" style="width:100%" class="compnTb">
-       	<tr>
-			<td colspan="2"><div align="center">' . $duplct . '</div></td>                
-        </tr>
-        <tr>
         
 	    <tr>
             <td colspan="2"><div align="center"> <h1 style="margin-bottom:0px; font-size: 20px;">' . $res_com['fullName'] . $res_com['web_comdetail_eng'] . ' ' . $ERRORhtml . '</h1> </div></td>                            
@@ -189,9 +187,15 @@ if ($com_id == 320) {
         <tr>
             <td colspan="2"><div align="center"> ' . $res_com['email'] . ' </div> </td>                            
         </tr>        
-        <tr>
+         <tr>
             <td colspan="2"><div align="center"> Tel-' . $res_com['tel'] . ' </div> </td>                            
-        </tr>
+        </tr> 
+         <tr>
+            <td colspan="2"><div align="center"> goldenpaints.lk </div> </td>                            
+         <tr>
+            <td colspan="2"><div align="center"><b> ---------------- Invoice ---------------- <b></div> </td>                            
+        </tr> 
+         </tr>
         <tr>
             <td colspan="2"><div align="center"> <strong>&nbsp;</strong></div> </td>                            
         </tr>
@@ -352,7 +356,7 @@ if ($com_id == 320) {
                             <td>&nbsp; </td>
                             <td><div align="right" style="font-size:12px;" >' . $qty . ' </div></td>   
                             <td><div align="right" style="font-size:12px;">' . numFormt2($fixedPrice) . '</div></td>
-                            <td><div align="right" style="font-size:12px;">' . numFormt2($fixedPrice)- numFormt2($res_itm['DiscValue']) . '</div></td>  
+                            <td><div align="right" style="font-size:12px;">' . $discountAmount . '</div></td>  
                             <td><div align="right" style="font-size:12px;">' . numFormt2($res_itm['DiscValue']) . '</div></td>
                         </tr>';
                     } else {
@@ -396,7 +400,7 @@ if ($com_id == 320) {
                                     <td><div align="right" style="text-align: left;">' . $remarksVal . ' </div> </td> 
                                     <td><div align="right">' . numFormt2($fixedPrice) . ' </div></td>  
                                     <td><div align="right">' . $qty . '  </div></td>
-                                    <td><div align="right">' . numFormt2($fixedPrice - ($res_itm['DiscValue'])) . '</div></td>
+                                    <td><div align="right">' . $discountAmount . '</div></td>
                                     <td><div align="right">' . numFormt2($res_itm['DiscValue']) . '</div></td>
                                 </tr>';
                         }
@@ -439,6 +443,7 @@ if ($com_id == 320) {
             $cashType = ($res_invDet['cusPaid'] != 0) ? 'Cash' : 'Credit';
 
             echo  '</br> <table border="0" class="finTb" style="float:right;">  
+            <!--
         <tr>
             <td width="110px">&nbsp;  </td>
             <td width="135px">Inv Type </td>
@@ -454,7 +459,7 @@ if ($com_id == 320) {
             <td width="135px">Item.Discount </td>
             <td width="85px"><div align="right"> ' . numFormt2($dis_tot) . ' </div> </td>
         </tr>
-        
+        -->
         <tr>
             <td width="110px">&nbsp;  </td>
             <td width="135px" style="font-weight:bold; font-size:12px;">Total </td>
@@ -492,7 +497,7 @@ if ($com_id == 320) {
             if ($res_outStnd[0] != 0) {
                 $outTot =  numFormt2($res_outStnd[0] - $blnc);
                 echo '
-          <tr>
+          <!--<tr>
               <td width="110px">&nbsp;  </td>
               <td width="135px">Outstanding Balance </td>
               <td width="85px"><div align="right">' . $outTot . '</td>
@@ -519,10 +524,10 @@ if ($com_id == 320) {
           <td width="110px">&nbsp;  </td>
           <td width="110px">NOTE</td>
           <td width="85px"><div align="right">' . $note . ' ' . $unitNote . '</td>
-          </tr>
+          </tr>-->
     </table>
     <center>
-    <img src="img/1366_qr.jpg" width="50%" height="auto">
+    <img src="img/1366_qr.jpg" width="60%" height="auto" display="block" >
     <center>
     
     ';
