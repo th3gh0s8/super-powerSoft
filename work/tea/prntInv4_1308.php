@@ -233,6 +233,8 @@ if (isset($_GET['duplct'])) {
 				} else {
 					$duedays_text = 'Cash';
 				}
+
+				$invID = $inv['ID'];
 // --- Social Media Section using Font Awesome ---
 $social_media_html = '
 <div style="margin-top:1px; font-size:13px; text-align:center;">
@@ -484,7 +486,7 @@ echo '</table>';
 					$imeLst .= $imes[0] . ' (' . $imes[1] . '), ';
 				}
 			}
-			$imeLst1 = $imeLst != '' ? '<br> - ' . $imeLst : '';
+			$imeLst1 = $imeLst != '' ? ' - ' . $imeLst : '';
 			$disVal = '';
 			$priceVal = '';
 			if ($itm['mysql_db'] == 'D' || $itm['mysql_db'] == '') {
