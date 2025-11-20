@@ -136,7 +136,7 @@ if ($com_id == 320) {
         echo '<div class="" style="height:auto;width:100%; ' . $mw . ' " align="left">';
     }
 
-    $sql_com = $mysqli->query("SELECT name, tel, fax, address, email, invoiceText, fullName, web_comdetail_eng FROM com_brnches WHERE ID='$br_id'");
+    $sql_com = $mysqli->query("SELECT name, tel, fax, address, email, invoiceText, fullName, web_comdetail_eng, brImg FROM com_brnches WHERE ID='$br_id'");
     $res_com = $sql_com->fetch_array();
     $mw = '';
 
@@ -159,6 +159,18 @@ if ($com_id == 320) {
     if ((float)number_format($res_invDet['InvTot']) !== (float)number_format($invitemTotal1)) {
         $ERRORhtml = '<span style="color: red; font-weight:bold;">RE-CHECK</span>';
     }
+
+     echo '	                                                 
+    <table border="0" style="width:100%" class="compnTb">
+        <tr>';
+        
+        if($res_com['brImg'] != ''){
+            echo '
+            <tr>
+        		<td colspan="2"><div align="center"><img src="https://'.$_SERVER['HTTP_HOST'].'/Home/new/images/logo/'.$res_com['brImg'].'?3" style="width: 50%;" /></div></td>                
+            </tr>
+            ';
+        }
 
 
     echo '	                                                 
@@ -271,22 +283,25 @@ if ($com_id == 320) {
             <thead>
                 <?php
                 //$com_id=320;
-                if (trim($com_id) == 320) {
-                    echo  ' <tr>
-                <th style="width:55px">Code</th>
-				 <th style="width:105px"><div align="right">Qty</div></th>
-                <th style="width:60px"><div align="right">Rate</div></th>					             
-                <th style="width:85px"><div align="right">Value</div></th>					
-            </tr>';
-                } else {
 
+                
+              if (trim($com_id) == 320) {
                     echo  ' <tr>
-                <th style="width:55px">Code</th>
-                <th style="width:105px"><div align="right">Rate</div></th>					
-                <th style="width:60px"><div align="right">Qty</div></th>                
-                <th style="width:85px"><div align="right">Value</div></th>					
-            </tr>';
-                }
+                        <th style="width:55px">Code</th>
+                        <th style="width:105px"><div align="right">Qty</div></th>
+                        <th style="width:60px"><div align="right">Rate</div></th>
+                        <th style="width:60px"><div align="right">Disc</div></th>					             
+                        <th style="width:85px"><div align="right">Value</div></th>					
+                    </tr>';
+                } else {
+                    echo  ' <tr>
+                        <th style="width:55px">Code</th>
+                        <th style="width:105px"><div align="right">Rate</div></th>					
+                        <th style="width:60px"><div align="right">Qty</div></th>
+                        <th style="width:60px"><div align="right">Disc</div></th>
+                        <th style="width:85px"><div align="right">Value</div></th>					
+                    </tr>';
+                } 
 
                 ?>
             </thead>
@@ -320,6 +335,9 @@ if ($com_id == 320) {
 
                     $xword = str_replace("\\", "", $itmNms['XWord']);
 
+                    
+                    $discountAmount = numFormt2($fixedPrice - ($res_itm['DiscValue'])) ; 
+
                     if (trim($com_id) == 320) {
 
 
@@ -330,13 +348,13 @@ if ($com_id == 320) {
 				<span style="font-size:12px; font-family:araliya; text-transform: none;" > ' . $xword . ' </span> </td>
         	</tr>';
 
-                        echo '<tr>
-                <td>&nbsp; </td>
-				 <td><div align="right" style="font-size:12px;" >' . $qty . ' </div></td>   
-				<td><div align="right" style="font-size:12px;">' . numFormt2($fixedPrice) . '</div></td>  
-                                      
-                <td><div align="right" style="font-size:12px;">' . numFormt2($res_itm['DiscValue']) . '</div></td>
-             </tr>';
+                    echo '<tr>
+                            <td>&nbsp; </td>
+                            <td><div align="right" style="font-size:12px;" >' . $qty . ' </div></td>   
+                            <td><div align="right" style="font-size:12px;">' . numFormt2($fixedPrice) . '</div></td>
+                            <td><div align="right" style="font-size:12px;">' . numFormt2($fixedPrice)- numFormt2($res_itm['DiscValue']) . '</div></td>  
+                            <td><div align="right" style="font-size:12px;">' . numFormt2($res_itm['DiscValue']) . '</div></td>
+                        </tr>';
                     } else {
 
                         $lineBold = '';
@@ -375,11 +393,12 @@ if ($com_id == 320) {
 
 
                             echo '<tr>
-                <td><div align="right" style="text-align: left;">' . $remarksVal . ' </div> </td> 
-				<td><div align="right">' . numFormt2($fixedPrice) . ' </div></td>  
-                <td><div align="right">' . $qty . '  </div></td>                         
-                <td><div align="right">' . numFormt2($res_itm['DiscValue']) . '</div></td>
-             </tr>';
+                                    <td><div align="right" style="text-align: left;">' . $remarksVal . ' </div> </td> 
+                                    <td><div align="right">' . numFormt2($fixedPrice) . ' </div></td>  
+                                    <td><div align="right">' . $qty . '  </div></td>
+                                    <td><div align="right">' . numFormt2($fixedPrice - ($res_itm['DiscValue'])) . '</div></td>
+                                    <td><div align="right">' . numFormt2($res_itm['DiscValue']) . '</div></td>
+                                </tr>';
                         }
                     }
                 }
@@ -501,7 +520,14 @@ if ($com_id == 320) {
           <td width="110px">NOTE</td>
           <td width="85px"><div align="right">' . $note . ' ' . $unitNote . '</td>
           </tr>
-    </table>';
+    </table>
+    <center>
+    <img src="img/1366_qr.jpg" width="50%" height="auto">
+    <center>
+    
+    ';
+
+    
         }
         if ($com_id == 860) {
             echo '<hr/>
