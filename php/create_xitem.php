@@ -1431,6 +1431,13 @@ table#employee_grid td {
                                                     <br><br>
 
                                                         <div class="row">
+                                                                <div class="form-group col-sm-2 col-md-2 col-xs-12">
+                                                                    <!--<span class="charCount" style="background-color:#9c9fe5; padding:2px; color:white; border-radius:50%; width:23px; height:23px; position: absolute; top: 73%; right: 5px; transform: translateY(-50%);">0</span>-->
+                                                                </div>
+
+                                                            <div class="form-group col-sm-7 col-md-7 col-xs-12">
+                                                                    <!--<span class="charCount" style="background-color:#9c9fe5; padding:2px; color:white; border-radius:50%; width:23px; height:23px; position: absolute; top: 73%; right: 5px; transform: translateY(-50%);">0</span>-->
+                                                            </div>
                                                             <div class="form-group col-sm-3 col-md-3 col-xs-12">
                                                                 <label>Select Category</label>
                                                                 <div style="position: relative;">
