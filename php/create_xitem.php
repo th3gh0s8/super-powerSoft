@@ -711,6 +711,84 @@ $cost_rht = $mysqli->query("SELECT * FROM `user_rights` JOIN pages ON `user_righ
                     $showCost = 'No';
                  }
 
+/*
+$keyword = isset($_POST['keyword']) ? $_POST['keyword'] : '';
+$keyword = $mysqli->real_escape_string($keyword);
+
+$query = "
+    SELECT DISTINCT CatID
+    FROM itemtable
+    WHERE CatID LIKE '%$keyword%'
+    ORDER BY CatID
+    LIMIT 10
+";
+
+$result = $mysqli->query($query);
+
+$categories = array();
+while ($row = $result->fetch_array()) {
+    $categories[] = $row['CatID'];
+}
+json_encode($categories);
+*/
+
+if(isset($_POST['keyword'])) {
+    $keyword = $mysqli->real_escape_string($_POST['keyword']);
+    
+    $query = "
+        SELECT DISTINCT 
+            Type,
+            CatID,
+            XWord
+        FROM itemtable
+        JOIN br_stock ON itemtable.ID = br_stock.itm_id
+        WHERE br_stock.br_id = '$br_id'
+        AND itm_delete = 0
+        AND (
+            Type LIKE '%$keyword%' 
+            OR CatID LIKE '%$keyword%' 
+            OR XWord LIKE '%$keyword%'
+        )
+        ORDER BY Type, CatID, XWord
+        LIMIT 20
+    ";
+    
+    $result = $mysqli->query($query);
+    
+    $categories = array();
+    while ($row = $result->fetch_assoc()) {
+        $type = isset($row['Type']) && $row['Type'] ? $row['Type'] : '';
+        $category = isset($row['CatID']) && $row['CatID'] ? $row['CatID'] : '';
+        $extra = isset($row['XWord']) && $row['XWord'] ? $row['XWord'] : '';
+        
+        // Build full path
+        $path_parts = array();
+        if ($type !== '') $path_parts[] = $type;
+        if ($category !== '') $path_parts[] = $category;
+        if ($extra !== '') $path_parts[] = $extra;
+        
+        $full_path = implode(' > ', $path_parts);
+        
+        // Only add if we have at least one value
+        if ($full_path !== '') {
+            $categories[] = array(
+                'full_path' => $full_path,
+                'type' => $type,
+                'category' => $category,
+                'extra_category' => $extra
+            );
+        }
+    }
+    
+    header('Content-Type: application/json');
+    echo json_encode($categories);
+    exit;
+}
+
+// If no keyword, return empty array
+header('Content-Type: application/json');
+echo json_encode(array());
+exit;
 ?>
 
 
@@ -1012,6 +1090,60 @@ table#employee_grid td {
     white-space: normal;   /* Allows text to wrap within the cell */
 }
 
+.category-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.category-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.category-item:hover {
+    background-color: #f5f5f5;
+}
+
+.category-item .category-path {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+}
+
+.category-item .category-details {
+    font-size: 11px;
+    color: #666;
+    margin-top: 3px;
+}
+
+.category-item.selected {
+    background-color: #26B99A;
+    color: white;
+}
+
+.category-item.selected .category-path,
+.category-item.selected .category-details {
+    color: white;
+}
+
+.no-results {
+    padding: 10px;
+    text-align: center;
+    color: #999;
+    font-style: italic;
+}
+
 </style>
 
 
@@ -1244,6 +1376,67 @@ table#employee_grid td {
     .exCatD11 {
         padding: 2px;
     }
+
+    .category-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 9999;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-top: -1px;
+}
+
+.category-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.category-item:last-child {
+    border-bottom: none;
+}
+
+.category-item:hover {
+    background-color: #f5f5f5;
+}
+
+.category-item .category-path {
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.category-item .category-details {
+    font-size: 11px;
+    color: #666;
+    font-style: italic;
+}
+
+.category-item.selected {
+    background-color: #26B99A;
+}
+
+.category-item.selected .category-path,
+.category-item.selected .category-details {
+    color: white;
+}
+
+.no-results {
+    padding: 12px;
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    font-size: 13px;
+}
 </style>
 
 
@@ -1431,20 +1624,31 @@ table#employee_grid td {
                                                     <br><br>
 
                                                         <div class="row">
+                                                          
                                                                 <div class="form-group col-sm-2 col-md-2 col-xs-12">
-                                                                    <!--<span class="charCount" style="background-color:#9c9fe5; padding:2px; color:white; border-radius:50%; width:23px; height:23px; position: absolute; top: 73%; right: 5px; transform: translateY(-50%);">0</span>-->
+                                                                    <!--<span class="charCount"...-->
                                                                 </div>
 
-                                                            <div class="form-group col-sm-7 col-md-7 col-xs-12">
-                                                                    <!--<span class="charCount" style="background-color:#9c9fe5; padding:2px; color:white; border-radius:50%; width:23px; height:23px; position: absolute; top: 73%; right: 5px; transform: translateY(-50%);">0</span>-->
-                                                            </div>
-                                                            <div class="form-group col-sm-3 col-md-3 col-xs-12">
-                                                                <label>Select Category</label>
-                                                                <div style="position: relative;">
-                                                                    <input id="com_cat" type="text" list="itmList" name="com_cat" class="form-control txt-auto com_cat charKey" placeholder="" style="font-size:14px;">
-                                                                    <!--<span class="charCount" style="background-color:#9c9fe5; padding:2px; color:white; border-radius:50%; width:23px; height:23px; position: absolute; top: 73%; right: 5px; transform: translateY(-50%);">0</span>-->
+                                                                <div class="form-group col-sm-7 col-md-7 col-xs-12">
+                                                                    <!--<span class="charCount"...-->
+                                                                </div>
+
+                                                                <div class="form-group col-sm-3 col-md-3 col-xs-12">
+                                                                    <label>Select Category</label>
+                                                                    <div style="position: relative;">
+                                                                        <input id="com_cat_search" 
+                                                                            type="text" 
+                                                                            class="form-control charKey" 
+                                                                            placeholder="Search: Type > Category > Extra" 
+                                                                            style="font-size:14px;"
+                                                                            autocomplete="off">
+                                                                        <div id="categoryDropdown" class="category-dropdown" style="display:none;"></div>
+                                                                        <span class="charCount" style="background-color:#9c9fe5; padding:2px; color:white; border-radius:50%; width:23px; height:23px; position: absolute; top: 73%; right: 5px; transform: translateY(-50%);">0</span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
+                                                      
+
                                                         </div>
                                                     <br><br>
                                                     <fieldset>
@@ -1466,11 +1670,29 @@ table#employee_grid td {
                                                                     <span class="charCount" style="background-color:#9c9fe5; padding:2px; color:white; border-radius:50%; width:23px; height:23px; position: absolute; top: 73%; right: 5px; transform: translateY(-50%);">0</span>
                                                                 </div>
                                                             </div>
-
+<!--
                                                             <div class="form-group col-sm-3 col-md-3 col-xs-12">
                                                                 <label>Category</label>
                                                                 <div style="position: relative;">
                                                                     <input id="com_cat" type="text" list="itmList" name="com_cat" class="form-control txt-auto com_cat charKey" placeholder="" style="font-size:14px;">
+                                                                    <span class="charCount" style="background-color:#9c9fe5; padding:2px; color:white; border-radius:50%; width:23px; height:23px; position: absolute; top: 73%; right: 5px; transform: translateY(-50%);">0</span>
+                                                                </div>
+                                                            </div>
+                                                            
+                                  
+                                                            -->
+
+                                                            <div class="form-group col-sm-3 col-md-3 col-xs-12">
+                                                                <label>Category</label>
+                                                                <div style="position: relative;">
+                                                                    <input id="com_cat" 
+                                                                        type="text" 
+                                                                        name="com_cat" 
+                                                                        class="form-control txt-auto com_cat charKey" 
+                                                                        placeholder="Search category..." 
+                                                                        style="font-size:14px;"
+                                                                        autocomplete="off">
+                                                                    <div id="categoryDropdown" class="category-dropdown" style="display:none;"></div>
                                                                     <span class="charCount" style="background-color:#9c9fe5; padding:2px; color:white; border-radius:50%; width:23px; height:23px; position: absolute; top: 73%; right: 5px; transform: translateY(-50%);">0</span>
                                                                 </div>
                                                             </div>
@@ -2140,20 +2362,20 @@ table#employee_grid td {
 
                                         <!-- table search -->
 
-<div class="form-group status-filter-group" style="margin-bottom: 20px;">
-    <label class="activesr-radio-inline">All
-        <input type="radio" name="statusFilter" value="all" checked>
-        <span class="checkmark"></span>
-    </label>
-    <label class="activesr-radio-inline">Active
-        <input type="radio" name="statusFilter" value="active">
-        <span class="checkmark"></span>
-    </label>
-    <label class="activesr-radio-inline">Inactive
-        <input type="radio" name="statusFilter" value="inactive">
-        <span class="checkmark"></span>
-    </label>
-</div>
+                                        <div class="form-group status-filter-group" style="margin-bottom: 20px;">
+                                            <label class="activesr-radio-inline">All
+                                                <input type="radio" name="statusFilter" value="all" checked>
+                                                <span class="checkmark"></span>
+                                            </label>
+                                            <label class="activesr-radio-inline">Active
+                                                <input type="radio" name="statusFilter" value="active">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                            <label class="activesr-radio-inline">Inactive
+                                                <input type="radio" name="statusFilter" value="inactive">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
 
                                         <div class="load_itm">
 
@@ -2733,8 +2955,8 @@ $(document).ready(function() {
                     // get id
 
 
-                    //category
-
+                //category
+/*
                     $('.com_cat').keyup(function() {
                         //alert('OK')
                         autoTypeNo = 0, autoTypeNo1 = 2;
@@ -2794,7 +3016,7 @@ $(document).ready(function() {
 
                         });
                     });
-
+*/
                     // category
 
                     // get vendor
@@ -3384,5 +3606,212 @@ $(document).ready(function() {
                         $('.costError').hide();
                     }
                 });
-                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                $(document).ready(function() {
+                    var selectedIndex = -1;
+                    var searchTimeout;
+                    var currentCategories = [];
+                    
+                    
+                   // Category search with dropdown - using the SEARCH field at top
+                $('#com_cat_search').on('input', function() {
+                    var keyword = $(this).val().trim();
+                    clearTimeout(searchTimeout);
+                    
+                    if (keyword.length >= 1) {
+                        searchTimeout = setTimeout(function() {
+                            $.ajax({
+                                url: 'ajx/get_category.php',
+                                method: 'POST',
+                                data: { keyword: keyword },
+                                dataType: 'json',
+                                success: function(data) {
+                                    console.log('Raw response:', data); // Debug
+                                    console.log('Type of response:', typeof data); // Debug
+                                    console.log('Is array?', Array.isArray(data)); // Debug
+                                    
+                                    if (data && Array.isArray(data)) {
+                                        currentCategories = data;
+                                        displayCategoryDropdown(data);
+                                    } else {
+                                        console.error('Invalid data format:', data);
+                                        $('#categoryDropdown').html('<div class="no-results">Error loading categories</div>').show();
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('AJAX Error:', error); // Debug
+                                    console.error('Status:', status); // Debug
+                                    console.error('Response:', xhr.responseText); // Debug
+                                    $('#categoryDropdown').hide();
+                                }
+                            });
+                        }, 300);
+                    } else {
+                        $('#categoryDropdown').hide();
+                    }
+                }); 
+                    
+                    // Display category dropdown
+                    function displayCategoryDropdown(categories) {
+                        var dropdown = $('#categoryDropdown');
+                        dropdown.empty();
+                        selectedIndex = -1;
+                        
+                        if (categories.length === 0) {
+                            dropdown.html('<div class="no-results">No categories found</div>');
+                            dropdown.show();
+                            return;
+                        }
+                        
+                        $.each(categories, function(index, cat) {
+                            // Build detail text
+                            var detailParts = [];
+                            if (cat.type) detailParts.push('Type: ' + cat.type);
+                            if (cat.category) detailParts.push('Category: ' + cat.category);
+                            if (cat.extra_category) detailParts.push('Extra: ' + cat.extra_category);
+                            var detailsText = detailParts.join(' | ');
+                            
+                            var item = $('<div>')
+                                .addClass('category-item')
+                                .attr('data-index', index)
+                                .attr('data-type', cat.type)
+                                .attr('data-category', cat.category)
+                                .attr('data-extra', cat.extra_category)
+                                .html(
+                                    '<div class="category-path">' + cat.full_path + '</div>' +
+                                    '<div class="category-details">' + detailsText + '</div>'
+                                );
+                            
+                            dropdown.append(item);
+                        });
+                        
+                        dropdown.show();
+                    }
+                    
+                    // Click on category item
+                    $(document).on('click', '.category-item', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        selectCategory($(this));
+                    });
+                    
+                    // Select category function - THIS FILLS THE FORM FIELDS
+                    function selectCategory($item) {
+                        var type = $item.attr('data-type');
+                        var category = $item.attr('data-category');
+                        var extra = $item.attr('data-extra');
+                        
+                        console.log('Selecting:', { type: type, category: category, extra: extra }); // Debug
+                        
+                        // Fill the FORM fields (not the search field)
+                        if (type) {
+                            $('.itm_type').val(type);
+                            $('.itm_type').css('color', '#0CCC0F');
+                            $('#typeVal').hide();
+                        }
+                        
+                        if (category) {
+                            $('#com_cat').val(category); // Main category field in form
+                            $('#com_cat').css('color', '#0CCC0F');
+                        }
+                        
+                        if (extra) {
+                            $('.ex_cate').val(extra);
+                            $('.ex_cate').css('color', '#0CCC0F');
+                            $('#extraCatDiv').hide();
+                        }
+                        
+                        // Clear the search field
+                        $('#com_cat_search').val('');
+                        
+                        // Hide dropdown
+                        $('#categoryDropdown').hide();
+                        
+                        // Update character counts
+                        $('.charKey').each(function() {
+                            charCount($(this));
+                        });
+                        
+                        // Focus on item name field
+                        $('#itm_name').focus();
+                    }
+                    
+                    // Keyboard navigation
+                    $('#com_cat_search').on('keydown', function(e) {
+                        var items = $('.category-item');
+                        if (items.length === 0) return;
+                        
+                        if (e.keyCode === 40) { // Down arrow
+                            e.preventDefault();
+                            selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                            updateSelection(items);
+                        } else if (e.keyCode === 38) { // Up arrow
+                            e.preventDefault();
+                            selectedIndex = Math.max(selectedIndex - 1, -1);
+                            updateSelection(items);
+                        } else if (e.keyCode === 13) { // Enter
+                            e.preventDefault();
+                            if (selectedIndex >= 0 && items.length > 0) {
+                                selectCategory($(items[selectedIndex]));
+                            }
+                            return false;
+                        } else if (e.keyCode === 27) { // Escape
+                            $('#categoryDropdown').hide();
+                            selectedIndex = -1;
+                        }
+                    });
+                    
+                    // Update selection highlight
+                    function updateSelection(items) {
+                        items.removeClass('selected');
+                        if (selectedIndex >= 0) {
+                            var selectedItem = $(items[selectedIndex]);
+                            selectedItem.addClass('selected');
+                            
+                            // Scroll to selected item
+                            var dropdown = $('#categoryDropdown');
+                            var itemTop = selectedItem.position().top;
+                            var itemHeight = selectedItem.outerHeight();
+                            var dropdownHeight = dropdown.height();
+                            var scrollTop = dropdown.scrollTop();
+                            
+                            if (itemTop < 0) {
+                                dropdown.scrollTop(scrollTop + itemTop);
+                            } else if (itemTop + itemHeight > dropdownHeight) {
+                                dropdown.scrollTop(scrollTop + itemTop + itemHeight - dropdownHeight);
+                            }
+                        }
+                    }
+                    
+                    // Close dropdown when clicking outside
+                    $(document).on('click', function(e) {
+                        if (!$(e.target).closest('#com_cat_search, #categoryDropdown').length) {
+                            $('#categoryDropdown').hide();
+                            selectedIndex = -1;
+                        }
+                    });
+                    
+                    // Focus event - show dropdown if there's a value
+                    $('#com_cat_search').on('focus', function() {
+                        if ($(this).val().length >= 1 && currentCategories.length > 0) {
+                            displayCategoryDropdown(currentCategories);
+                        }
+                    });
+                });
+                                
             </script>
